@@ -1,0 +1,24 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Panel de Admin</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="goToHome()">
+        Ver el home
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">lista-usuarios</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content color="light">
+    <ion-list [inset]="true">Lista de usuarios:<br>
+      <ion-label *ngFor="let usuario of usuarios">Nombre: {{usuario.username}} - Contraseña: {{usuario.password}} - Rol: {{usuario.role}}<br></ion-label>
+    </ion-list>
+  </ion-content>
+</ion-content>
