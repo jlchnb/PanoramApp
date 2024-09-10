@@ -35,3 +35,31 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import "@ionic/angular/css/palettes/dark.system.css";
+
+
+ion-item {
+    .input-wrapper {
+      --highlight-color: var(--ion-color-tertiary);
+    }
+
+    .native-input::placeholder {
+      color: var(--ion-color-placeholder, #000);
+    }
+  }
+
+  ion-label {
+    color: var(--ion-color-tertiary);
+  }
+
+  ion-input {
+    .input-wrapper {
+      ion-input-password-toggle {
+        --color: var(--ion-color-tertiary);
+      }
+    }
+  }
+
+  ion-toolbar {
+    --background: #331e7a;  // Color morado definido
+    color: #ffffff;  // Cambia el color del texto si es necesario
+  }
