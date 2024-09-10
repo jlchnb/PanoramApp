@@ -12,7 +12,7 @@ export class HomePage {
   constructor(private navCtrl: NavController) { }
 
   goToLogin() {
-    this.navCtrl.navigateForward('/login');
+    this.navCtrl.navigateForward('/welcome');
   }
 
   

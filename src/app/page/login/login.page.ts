@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { ModalController } from '@ionic/angular';
 import { UserLogin } from 'src/app/models/userLogin';
 import { UsersService } from 'src/app/api/users/users.service';
-import { Router } from '@angular/router';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
 })
-export class LoginPage implements OnInit {
+export class LoginPage {
 
   userLogin: UserLogin = {
     username: '',
@@ -16,33 +17,52 @@ export class LoginPage implements OnInit {
     role: 'admin'
   };
 
-  constructor(private _usersLogin: UsersService, private router: Router) { }
+  constructor(
+    private alertController: AlertController,
+    private _usersLogin: UsersService,
+    private modalCtrl: ModalController
+  ) { }
 
-  ngOnInit() { }
+  async presentAlert() {
+    const alert = await this.alertController.create({
+      header: 'Error',
+      subHeader: 'Datos incorrectos',
+      message: 'Usuario no existe o datos erroneos.',
+      buttons: ['OK'],
+      cssClass: 'custom-alert-header',
+      mode: 'ios',
+    });
 
-  login() {
+    await alert.present();
+  }
+
+  async login() {
     console.info('Datos de login:', this.userLogin);
     const usuario = this._usersLogin.getUsuario(this.userLogin.username);
-    console.info(usuario)
+    console.info(usuario);
+    
     if (usuario?.password === this.userLogin.password) {
-      console.info(usuario, 'estoy dentro!!')
+      console.info(usuario, 'estoy dentro!!');
+      
       if (usuario.role === 'admin') {
-        console.info('soy un admin')
-        this.router.navigate(['lista-usuarios'], {
-          state: {
-            userInfo: usuario
-          }
+        console.info('soy un admin');
+        await this.modalCtrl.dismiss({
+          userInfo: usuario,
+          redirectTo: 'lista-usuarios'
         });
       } else {
-        console.info('soy un usuario')
-        this.router.navigate(['home'], {
-          state: {
-            userInfo: usuario
-          }
+        console.info('soy un usuario');
+        await this.modalCtrl.dismiss({
+          userInfo: usuario,
+          redirectTo: 'home'
         });
       }
     } else {
-      console.info('Error, usuario no existe o datos incorrectos');
+      this.presentAlert();
     }
+  }
+
+  async dismiss() {
+    await this.modalCtrl.dismiss();
   }
 }

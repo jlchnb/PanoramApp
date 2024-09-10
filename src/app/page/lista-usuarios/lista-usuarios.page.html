@@ -18,7 +18,11 @@
 
   <ion-content color="light">
     <ion-list [inset]="true">Lista de usuarios:<br><br>
-      <ion-label *ngFor="let usuario of usuarios">Nombre: {{usuario.username}}<br>Contraseña: {{usuario.password}}<br>Rol: {{usuario.role}}<br><br><br></ion-label>
+      <ion-label class="datos-usuario" *ngFor="let usuario of usuarios">
+        Nombre: {{usuario.username}}<ion-icon name="person-circle-outline"></ion-icon><br>
+        Contraseña: {{usuario.password}}<br>
+        Rol: {{usuario.role}}<br><br><br>
+      </ion-label>
     </ion-list>
   </ion-content>
 </ion-content>
