@@ -54,3 +54,46 @@
 ion-grid {
   margin-top: 20px;
 }
+
+
+.categorias {
+  ion-chip {
+    padding: 5px;
+    border-radius: 10px;
+    font-weight: bold;
+    color: white;
+    margin-right: 5px;
+
+    &.familiar {
+      background-color: #FFCC00;
+    }
+
+    &.gratis {
+      background-color: #4CAF50;
+    }
+
+    &.social {
+      background-color: #FF5722;
+    }
+
+    &.música {
+      background-color: #9C27B0;
+    }
+
+    &.educativo {
+      background-color: #03A9F4;
+    }
+
+    &.deporte {
+      background-color: #F44336;
+    }
+
+    &.espectáculo {
+      background-color: #E91E63;
+    }
+
+    &.pago {
+      background-color: #FF9800;
+    }
+  }
+}

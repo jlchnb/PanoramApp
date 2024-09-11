@@ -1,11 +1,11 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>
-      PanoramApp
+    <ion-title slot="start">
+      Bienvendo {{loggedUser}}
     </ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="goToLogin()">
-        LOG OUT<ion-icon name='log-out-outline'></ion-icon>
+        LOG OUT <ion-icon name='log-out-outline'></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -37,34 +37,28 @@
       <ion-col size="4">
         <ion-card class="event-card">
           <ion-card-header>
-            <ion-card-title>3 de Frebrero</ion-card-title>
+            <ion-card-title>3 de Febrero</ion-card-title>
           </ion-card-header>
         </ion-card>
       </ion-col>
     </ion-row>
 
-    <ion-row>
+    <ion-row *ngFor="let evento of eventos">
       <ion-col size="12">
         <ion-card>
           <ion-card-content>
-            <p><strong>Nombre:</strong> Reino medieval en jardín botánico</p>
-            <p><strong>Hora:</strong> 11:00 - 19:00 hrs</p>
-            <p><strong>Categoria:</strong> Familiar - Gratis</p>
-            <img src="https://pbs.twimg.com/media/EPswjO6X0AcuQfQ.jpg:large">
+            <p><strong>Nombre:</strong> {{evento.nombre}}</p>
+            <p><strong>Hora:</strong> {{evento.fecha | date: 'shortTime'}} hrs</p>
+            <p><strong>Ubicacion:</strong> {{evento.ubicacion}}</p>
+            <p><strong>Categoría:</strong></p>
+            <div class="categorias">
+              <ion-chip *ngFor="let categoria of evento.categorias" [ngClass]="categoria.toLowerCase()">
+                {{categoria}}
+              </ion-chip>
+            </div>
+            <img [src]="'assets/images/' + evento.imagen" alt="{{ evento.nombre }}">
           </ion-card-content>
-        </ion-card>
-      </ion-col>
-    </ion-row>
-
-    <ion-row>
-      <ion-col size="12">
-        <ion-card>
-          <ion-card-content>
-            <p><strong>Nombre:</strong>Tocata en vivo - Roman Rojas</p>
-            <p><strong>Hora:</strong> 19:00 - 21:00 hrs</p>
-            <p><strong>Categoria:</strong> Social - Música</p>
-            <img src="https://static.u-cursos.cl/cache/html_thumb/53/5336/533620d830d42cd36dfab9385e197630/thumb.jpg">
-          </ion-card-content>
+          
         </ion-card>
       </ion-col>
     </ion-row>

@@ -29,7 +29,6 @@ export class UsersService {
     );
   }
   
-
   esAdmin(userLogin: UserLogin): boolean {
     const usuario = this.getUsuario(userLogin.username);
     return usuario ? usuario.role === 'admin' : false;

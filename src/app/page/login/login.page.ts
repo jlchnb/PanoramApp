@@ -44,6 +44,8 @@ export class LoginPage {
     if (usuario?.password === this.userLogin.password) {
       console.info(usuario, 'estoy dentro!!');
       
+      sessionStorage.setItem('loggedUser', usuario.username);
+  
       if (usuario.role === 'admin') {
         console.info('soy un admin');
         await this.modalCtrl.dismiss({
