@@ -25,7 +25,7 @@ export class WelcomePage implements OnInit {
       backdropDismiss: false,
       cssClass: 'login-modal',
     });
-
+  
     modal.onDidDismiss().then((result) => {
       if (result.data) {
         const { userInfo, redirectTo } = result.data;
@@ -38,7 +38,7 @@ export class WelcomePage implements OnInit {
         }
       }
     });
-
+  
     return await modal.present();
   }
 }

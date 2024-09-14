@@ -34,32 +34,43 @@
     --ion-color-tint: var(--ion-color-white-tint);
 }
 
-.login-modal .modal-wrapper {
-    height: 45%;
-    top: 55%;
-    position: absolute;
-    display: block;
-    border-radius: 20px 20px 0 0;
-}
-
-.register-modal .modal-wrapper {
-    height: 50%;
-    top: 50%;
-    position: absolute;
-    display: block;
-    border-radius: 20px 20px 0 0;
-}
-
-.primary-input {
+ion-modal {
+    --height: 50%; /* Modal ocupará la mitad inferior de la pantalla */
+    --border-radius: 20px 20px 0 0; /* Bordes superiores redondeados */
+    --background: white;
+    --padding: 0; /* Ajusta el padding según sea necesario */
+  }
+  
+  .login-modal .modal-wrapper {
+    height: 100%; /* Asegúrate de que el modal ocupe toda la altura disponible */
+    bottom: 0; /* Adherir al fondo de la pantalla */
+    left: 0;
+    right: 0;
+    border-radius: 20px 20px 0 0; /* Bordes superiores redondeados */
+    background-color: white;
+  }
+  
+  .login-modal .modal-backdrop {
+    opacity: 0.4;
+  }
+  
+  .login-content {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%; /* Asegúrate de que el contenido se ajuste al tamaño del modal */
+  }
+  
+  .primary-input {
     background: aliceblue;
     --padding-start: 10px !important;
     color: #999999;
     border-radius: 5px;
     margin-bottom: 10px;
-}
-
-/* Global style for ion-toolbar */
-ion-toolbar {
+  }
+  
+  ion-toolbar {
     --background: #6309ad;
-    color: #ffffff; /* Adjust text color if needed */
-}
+    color: #ffffff;
+  }
