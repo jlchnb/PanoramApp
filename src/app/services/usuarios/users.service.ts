@@ -1,50 +1,70 @@
 import { Injectable } from '@angular/core';
-import { Usuario } from 'src/app/models/Usuario'; // Cambia la importación de UserLogin a Usuario
+import { Usuario } from 'src/app/models/Usuario'; // Asegúrate de que tu modelo esté correctamente definido
+import { supabase } from '../supabase/supabase.service'; // Verifica que la ruta sea correcta
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsersService {
 
-  // Cambiar el tipo de datos del array de usuarios a Usuario
-  private usuarios: Usuario[] = [
-    {
-      username: "julio",
-      password: "duoc123",
-      role: "admin"
-    },
-    {
-      username: "miguel",
-      password: "123duoc",
-      role: "user"
-    }
-  ];
-
   constructor() { }
 
-  // Cambiar el tipo del parámetro a Usuario
-  validar_usuario(usuario: Usuario): boolean {
-    console.log('Usuarios:', this.usuarios);
-    return this.usuarios.some(user =>
-      user.username === usuario.username &&
-      user.password === usuario.password
-    );
+  async validar_usuario(usuario: Usuario): Promise<boolean> {
+    const { data, error } = await supabase
+      .from('usuarios') // Asegúrate de que esta sea la tabla correcta
+      .select('*')
+      .eq('username', usuario.username)
+      .eq('password', usuario.password)
+      .single(); // Devuelve un solo registro
+
+    if (error) {
+      console.error('Error al validar usuario:', error);
+      return false;
+    }
+
+    return !!data; // Retorna true si el usuario existe
   }
 
-  // Cambiar el tipo del parámetro a Usuario
-  esAdmin(usuario: Usuario): boolean {
-    // Usar el operador de coalescencia nula para evitar pasar undefined
-    const encontrado = this.getUsuario(usuario.username ?? '');
-    return encontrado ? encontrado.role === 'admin' : false;
+  async esAdmin(usuario: Usuario): Promise<boolean> {
+    const { data, error } = await supabase
+      .from('usuarios') // Asegúrate de que esta sea la tabla correcta
+      .select('*')
+      .eq('username', usuario.username)
+      .single(); // Devuelve un solo registro
+
+    if (error) {
+      console.error('Error al verificar admin:', error);
+      return false;
+    }
+
+    return data?.role === 'admin'; // Retorna true si es admin
   }
 
-  // Cambiar el tipo de retorno a Usuario o undefined
-  getUsuario(username: string): Usuario | undefined {
-    return this.usuarios.find(user => user.username === username);
+  async getUsuario(username: string): Promise<Usuario | null> {
+    const { data, error } = await supabase
+      .from('usuarios') // Asegúrate de que esta sea la tabla correcta
+      .select('*')
+      .eq('username', username)
+      .single(); // Devuelve un solo registro
+
+    if (error) {
+      console.error('Error al obtener usuario:', error);
+      return null;
+    }
+
+    return data as Usuario; // Devuelve el usuario encontrado
   }
 
-  // Cambiar el tipo de retorno a Usuario[]
-  getAlluser(): Usuario[] {
-    return this.usuarios;
+  async getAlluser(): Promise<Usuario[]> {
+    const { data, error } = await supabase
+      .from('usuarios') // Asegúrate de que esta sea la tabla correcta
+      .select('*');
+
+    if (error) {
+      console.error('Error al obtener todos los usuarios:', error);
+      return [];
+    }
+
+    return data as Usuario[]; // Devuelve todos los usuarios
   }
 }
