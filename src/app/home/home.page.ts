@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
-import { EventosService } from '../services/eventos.service';
-import { Evento } from '../models/evento';
-import { UsersService } from '../api/users/users.service';
-import { UserLogin } from '../models/userLogin';
+import { EventosService } from '../services/eventos/eventos.service';
+import { Evento } from '../models/Evento';
+import { UsersService } from '../services/usuarios/users.service';
+import { Usuario } from '../models/Usuario';
 
 @Component({
   selector: 'app-home',
@@ -14,7 +14,7 @@ export class HomePage implements OnInit {
 
   isTodayEventVisible: boolean = true;
   eventos: Evento[] = [];
-  usuarios: UserLogin[] = [];
+  usuarios: Usuario[] = [];
   loggedUser: string = '';
 
   constructor(private _usersService: UsersService, private navCtrl: NavController, private eventosService: EventosService) { }

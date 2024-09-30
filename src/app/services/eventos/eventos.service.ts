@@ -1,7 +1,7 @@
 // src/app/services/eventos.service.ts
 
 import { Injectable } from '@angular/core';
-import { Evento } from '../models/evento';
+import { Evento } from '../../models/Evento';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,8 @@ export class EventosService {
       fecha: new Date('2024-09-15T11:00:00'),
       ubicacion: 'Jardín Botánico',
       categorias: ['Familiar', 'Gratis'],
-      imagen: 'reino_medieval.jpg'
+      imagen: 'reino_medieval.jpg',
+      isValidado: true // Asegúrate de agregar esta propiedad
     },
     {
       id: 2,
@@ -23,7 +24,8 @@ export class EventosService {
       fecha: new Date('2024-09-15T19:00:00'),
       ubicacion: 'Auditorio Central',
       categorias: ['Social', 'Música'],
-      imagen: 'tocata_roman.jpg'
+      imagen: 'tocata_roman.jpg',
+      isValidado: false // O el valor que desees asignar
     }
   ];
 

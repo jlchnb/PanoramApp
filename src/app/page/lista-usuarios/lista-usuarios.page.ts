@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { UserLogin } from 'src/app/models/userLogin';
-import { UsersService } from 'src/app/api/users/users.service';
+import { Usuario } from 'src/app/models/Usuario';
+import { UsersService } from 'src/app/services/usuarios/users.service';
 import { NavController } from '@ionic/angular';
 
 @Component({
@@ -10,7 +10,7 @@ import { NavController } from '@ionic/angular';
 })
 export class ListaUsuariosPage implements OnInit {
 
-  usuarios: UserLogin[] = [];
+  usuarios: Usuario[] = [];
 
   constructor(private _usersService: UsersService, private navCtrl: NavController) { }
 

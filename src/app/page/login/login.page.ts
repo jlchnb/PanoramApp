@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { UserLogin } from 'src/app/models/userLogin';
-import { UsersService } from 'src/app/api/users/users.service';
+import { Usuario } from 'src/app/models/Usuario';
+import { UsersService } from 'src/app/services/usuarios/users.service';
 import { AlertController } from '@ionic/angular';
 
 @Component({
@@ -11,7 +11,7 @@ import { AlertController } from '@ionic/angular';
 })
 export class LoginPage {
 
-  userLogin: UserLogin = {
+  userLogin: Usuario = {
     username: '',
     password: '',
     role: 'admin'
@@ -38,14 +38,22 @@ export class LoginPage {
 
   async login() {
     console.info('Datos de login:', this.userLogin);
+
+    if (!this.userLogin.username) {
+      await this.presentAlert();
+      return;
+    }
+
     const usuario = this._usersLogin.getUsuario(this.userLogin.username);
     console.info(usuario);
     
-    if (usuario?.password === this.userLogin.password) {
-      console.info(usuario, 'estoy dentro!!');
-      
-      sessionStorage.setItem('loggedUser', usuario.username);
-  
+    if (usuario && usuario.password === this.userLogin.password) {
+      console.info(usuario, '¡Acceso concedido!');
+
+      if (usuario.username) {
+        sessionStorage.setItem('loggedUser', usuario.username);
+      }
+
       if (usuario.role === 'admin') {
         console.info('soy un admin');
         await this.modalCtrl.dismiss({
