@@ -44,9 +44,11 @@ export class LoginPage {
       return;
     }
 
-    const usuario = this._usersLogin.getUsuario(this.userLogin.username);
+    // Usar await para esperar la promesa de getUsuario()
+    const usuario = await this._usersLogin.getUsuario(this.userLogin.username);
     console.info(usuario);
-    
+
+    // Verificar si el usuario existe y tiene una contraseña válida
     if (usuario && usuario.password === this.userLogin.password) {
       console.info(usuario, '¡Acceso concedido!');
 
@@ -54,14 +56,15 @@ export class LoginPage {
         sessionStorage.setItem('loggedUser', usuario.username);
       }
 
+      // Verificar el rol del usuario
       if (usuario.role === 'admin') {
-        console.info('soy un admin');
+        console.info('Soy un admin');
         await this.modalCtrl.dismiss({
           userInfo: usuario,
           redirectTo: 'lista-usuarios'
         });
       } else {
-        console.info('soy un usuario');
+        console.info('Soy un usuario');
         await this.modalCtrl.dismiss({
           userInfo: usuario,
           redirectTo: 'home'

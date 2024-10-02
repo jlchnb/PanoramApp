@@ -14,8 +14,9 @@ export class ListaUsuariosPage implements OnInit {
 
   constructor(private _usersService: UsersService, private navCtrl: NavController) { }
 
-  ngOnInit() {
-    this.usuarios = this._usersService.getAlluser();
+  async ngOnInit() {
+    // Esperar a que la promesa se resuelva antes de asignar a 'usuarios'
+    this.usuarios = await this._usersService.getAlluser();
     console.info(this.usuarios);
   }
 
