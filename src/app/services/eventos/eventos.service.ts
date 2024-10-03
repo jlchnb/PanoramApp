@@ -1,37 +1,34 @@
-// src/app/services/eventos.service.ts
-
 import { Injectable } from '@angular/core';
-import { Evento } from '../../models/Evento';
+import { Evento } from 'src/app/models/Evento';
+import { supabase } from '../supabase/supabase.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EventosService {
 
-  private eventos: Evento[] = [
-    {
-      id: 1,
-      nombre: 'Reino medieval en jardín botánico',
-      fecha: new Date('2024-09-15T11:00:00'),
-      ubicacion: 'Jardín Botánico',
-      categorias: ['Familiar', 'Gratis'],
-      imagen: 'reino_medieval.jpg',
-      isValidado: true // Asegúrate de agregar esta propiedad
-    },
-    {
-      id: 2,
-      nombre: 'Tocata en vivo - Roman Rojas',
-      fecha: new Date('2024-09-15T19:00:00'),
-      ubicacion: 'Auditorio Central',
-      categorias: ['Social', 'Música'],
-      imagen: 'tocata_roman.jpg',
-      isValidado: false // O el valor que desees asignar
-    }
-  ];
-
   constructor() { }
 
-  obtenerEventos(): Evento[] {
-    return this.eventos;
+  async obtenerEventos(): Promise<Evento[]> {
+    const { data, error } = await supabase
+      .from('eventos')
+      .select('*');
+
+    if (error) {
+      console.error('Error al obtener eventos:', error);
+      return [];
+    }
+    
+    return data as Evento[];
+  }
+
+  async crearEvento(evento: Evento): Promise<void> {
+    const { error } = await supabase
+      .from('eventos')
+      .insert(evento);
+
+    if (error) {
+      console.error('Error al crear el evento:', error);
+    }
   }
 }

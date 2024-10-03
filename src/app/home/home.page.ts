@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { EventosService } from '../services/eventos/eventos.service';
 import { Evento } from '../models/Evento';
-import { UsersService } from '../services/usuarios/users.service';
 import { Usuario } from '../models/Usuario';
 
 @Component({
@@ -17,16 +16,26 @@ export class HomePage implements OnInit {
   usuarios: Usuario[] = [];
   loggedUser: string = '';
 
-  constructor(private _usersService: UsersService, private navCtrl: NavController, private eventosService: EventosService) { }
+  constructor(
+    private navCtrl: NavController, 
+    private eventosService: EventosService
+  ) {}
 
-  ngOnInit() {
-    this.eventos = this.eventosService.obtenerEventos();
-    
+  async ngOnInit() {
+    try {
+      this.eventos = await this.eventosService.obtenerEventos();
+      console.info('Eventos obtenidos:', this.eventos);
+    } catch (error) {
+      console.error('Error al obtener eventos:', error);
+    }
+
     this.loggedUser = sessionStorage.getItem('loggedUser') || ''; 
     console.info('Usuario logueado:', this.loggedUser);
   }
 
   goToLogin() {
+    sessionStorage.removeItem('loggedUser');
+    this.loggedUser = '';
     this.navCtrl.navigateForward('/welcome');
   }
 }

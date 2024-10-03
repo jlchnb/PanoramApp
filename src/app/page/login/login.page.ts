@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { ModalController, AlertController, LoadingController } from '@ionic/angular';
 import { Usuario } from 'src/app/models/Usuario';
 import { UsersService } from 'src/app/services/usuarios/users.service';
-import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-login',
@@ -10,7 +9,6 @@ import { AlertController } from '@ionic/angular';
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage {
-
   userLogin: Usuario = {
     username: '',
     password: '',
@@ -20,7 +18,8 @@ export class LoginPage {
   constructor(
     private alertController: AlertController,
     private _usersLogin: UsersService,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private loadingController: LoadingController // Agregado
   ) { }
 
   async presentAlert() {
@@ -44,34 +43,48 @@ export class LoginPage {
       return;
     }
 
-    // Usar await para esperar la promesa de getUsuario()
-    const usuario = await this._usersLogin.getUsuario(this.userLogin.username);
-    console.info(usuario);
+    // Mostrar loading
+    const loading = await this.loadingController.create({
+      message: 'Iniciando sesión...',
+      spinner: 'circles',
+    });
+    await loading.present();
 
-    // Verificar si el usuario existe y tiene una contraseña válida
-    if (usuario && usuario.password === this.userLogin.password) {
-      console.info(usuario, '¡Acceso concedido!');
+    try {
+      // Usar await para esperar la promesa de getUsuario()
+      const usuario = await this._usersLogin.getUsuario(this.userLogin.username);
+      console.info(usuario);
 
-      if (usuario.username) {
-        sessionStorage.setItem('loggedUser', usuario.username);
-      }
+      // Verificar si el usuario existe y tiene una contraseña válida
+      if (usuario && usuario.password === this.userLogin.password) {
+        console.info(usuario, '¡Acceso concedido!');
 
-      // Verificar el rol del usuario
-      if (usuario.role === 'admin') {
-        console.info('Soy un admin');
-        await this.modalCtrl.dismiss({
-          userInfo: usuario,
-          redirectTo: 'lista-usuarios'
-        });
+        if (usuario.username) {
+          sessionStorage.setItem('loggedUser', usuario.username);
+        }
+
+        // Verificar el rol del usuario
+        if (usuario.role === 'admin') {
+          console.info('Soy un admin');
+          await this.modalCtrl.dismiss({
+            userInfo: usuario,
+            redirectTo: 'lista-usuarios'
+          });
+        } else {
+          console.info('Soy un usuario');
+          await this.modalCtrl.dismiss({
+            userInfo: usuario,
+            redirectTo: 'home'
+          });
+        }
       } else {
-        console.info('Soy un usuario');
-        await this.modalCtrl.dismiss({
-          userInfo: usuario,
-          redirectTo: 'home'
-        });
+        await this.presentAlert();
       }
-    } else {
-      this.presentAlert();
+    } catch (error) {
+      console.error('Error al obtener el usuario:', error);
+      await this.presentAlert(); // Muestra alerta si ocurre un error
+    } finally {
+      loading.dismiss(); // Asegúrate de ocultar el loading en cualquier caso
     }
   }
 
