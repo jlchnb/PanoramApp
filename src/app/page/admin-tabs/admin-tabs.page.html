@@ -1,0 +1,23 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Admin Panel</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-tabs>
+    <ion-tab-bar slot="bottom">
+      <!-- Tab para lista de usuarios -->
+      <ion-tab-button tab="usuarios">
+        <ion-icon name="people-outline"></ion-icon>
+        <ion-label>Usuarios</ion-label>
+      </ion-tab-button>
+
+      <!-- Tab para lista de eventos -->
+      <ion-tab-button tab="eventos">
+        <ion-icon name="calendar-outline"></ion-icon>
+        <ion-label>Eventos</ion-label>
+      </ion-tab-button>
+    </ion-tab-bar>
+  </ion-tabs>
+</ion-content>
