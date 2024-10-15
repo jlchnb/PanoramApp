@@ -43,7 +43,6 @@ export class LoginPage {
       return;
     }
 
-    // Mostrar loading
     const loading = await this.loadingController.create({
       message: 'Iniciando sesión...',
       spinner: 'circles',
@@ -51,11 +50,9 @@ export class LoginPage {
     await loading.present();
 
     try {
-      // Usar await para esperar la promesa de getUsuario()
       const usuario = await this._usersLogin.getUsuario(this.userLogin.username);
       console.info(usuario);
 
-      // Verificar si el usuario existe y tiene una contraseña válida
       if (usuario && usuario.password === this.userLogin.password) {
         console.info(usuario, '¡Acceso concedido!');
 
@@ -63,7 +60,6 @@ export class LoginPage {
           sessionStorage.setItem('loggedUser', usuario.username);
         }
 
-        // Verificar el rol del usuario
         if (usuario.role === 'admin') {
           console.info('Soy un admin');
           await this.modalCtrl.dismiss({
@@ -82,9 +78,9 @@ export class LoginPage {
       }
     } catch (error) {
       console.error('Error al obtener el usuario:', error);
-      await this.presentAlert(); // Muestra alerta si ocurre un error
+      await this.presentAlert();
     } finally {
-      loading.dismiss(); // Asegúrate de ocultar el loading en cualquier caso
+      loading.dismiss();
     }
   }
 
