@@ -1,0 +1,36 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Lista de Eventos</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="goToHome()">
+        Ver el home
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Eventos</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content color="light">
+    <ion-list [inset]="true">
+      <div *ngIf="eventos.length === 0">
+        <ion-label>No hay eventos disponibles.</ion-label>
+      </div>
+      <ng-container *ngFor="let evento of eventos">
+        <ion-item>
+          <ion-label>
+            <h2>Nombre: {{ evento.nombre }} <ion-icon name="calendar-outline"></ion-icon></h2>
+            <p>Fecha: {{ evento.fecha }}</p>
+            <p>Ubicación: {{ evento.ubicacion }}</p>
+            <p>Validado: {{ evento.isValidado ? 'Sí' : 'No' }}</p>
+          </ion-label>
+        </ion-item>
+      </ng-container>
+    </ion-list>
+  </ion-content>
+</ion-content>
