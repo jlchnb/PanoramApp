@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ModalController, AlertController } from '@ionic/angular';
+import { ModalController, AlertController, LoadingController } from '@ionic/angular'; // Asegúrate de importar LoadingController
 import { Usuario } from 'src/app/models/Usuario';
 import { UsersService } from 'src/app/services/usuarios/users.service';
 
@@ -18,14 +18,15 @@ export class LoginPage {
   constructor(
     private alertController: AlertController,
     private _usersLogin: UsersService,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private loadingController: LoadingController // Inyectamos LoadingController en el constructor
   ) { }
 
   async presentAlert() {
     const alert = await this.alertController.create({
       header: 'Error',
       subHeader: 'Datos incorrectos',
-      message: 'Usuario no existe o datos erroneos.',
+      message: 'Usuario no existe o datos erróneos.',
       buttons: ['OK'],
       cssClass: 'custom-alert-header',
       mode: 'ios',
@@ -58,8 +59,8 @@ export class LoginPage {
         console.info(usuario, '¡Acceso concedido!');
 
         if (usuario.username) {
-          sessionStorage.setItem('loggedUser', usuario.username);
-        }
+          sessionStorage.setItem('loggedUser', JSON.stringify(usuario));
+      }
 
         if (usuario.role === 'admin') {
           console.info('Soy un admin');
@@ -80,6 +81,9 @@ export class LoginPage {
     } catch (error) {
       console.error('Error al obtener el usuario:', error);
       await this.presentAlert(); // Muestra alerta si ocurre un error
+    } finally {
+      // Asegúrate de cerrar el loading después del login
+      await loading.dismiss();
     }
   }
 
