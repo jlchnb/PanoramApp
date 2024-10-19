@@ -8,15 +8,15 @@
     <ion-content class="ion-padding">
       <ion-list>
         <ion-item button (click)="goToPerfil()">
-          <ion-icon name="person-circle-outline" slot="start"></ion-icon>
+          <ion-icon name="person-circle-outline" slot="start" class="black-icon"></ion-icon>
           Perfil
         </ion-item>
         <ion-item button (click)="goToEventos()">
-          <ion-icon name="calendar-outline" slot="start"></ion-icon>
+          <ion-icon name="calendar-outline" slot="start" class="black-icon"></ion-icon>
           Eventos
         </ion-item>
         <ion-item button (click)="goToAjustes()">
-          <ion-icon name="settings-outline" slot="start"></ion-icon>
+          <ion-icon name="settings-outline" slot="start" class="black-icon"></ion-icon>
           Ajustes
         </ion-item>
         <ion-item *ngIf="loggedUser?.role === 'admin'" button (click)="goToAdminPanel()">
@@ -25,6 +25,7 @@
       </ion-list>
     </ion-content>
   </ion-menu>
+  
 
   <div class="ion-page" id="main-content">
     <ion-header [translucent]="true">

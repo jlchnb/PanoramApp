@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ModalController, AlertController, LoadingController } from '@ionic/angular'; // Asegúrate de importar LoadingController
+import { ModalController, AlertController, LoadingController } from '@ionic/angular';
 import { Usuario } from 'src/app/models/Usuario';
 import { UsersService } from 'src/app/services/usuarios/users.service';
 
@@ -19,7 +19,7 @@ export class LoginPage {
     private alertController: AlertController,
     private _usersLogin: UsersService,
     private modalCtrl: ModalController,
-    private loadingController: LoadingController // Inyectamos LoadingController en el constructor
+    private loadingController: LoadingController
   ) { }
 
   async presentAlert() {
@@ -43,7 +43,6 @@ export class LoginPage {
       return;
     }
 
-    // Mostrar loading
     const loading = await this.loadingController.create({
       message: 'Iniciando sesión...',
       spinner: 'circles',
@@ -51,7 +50,6 @@ export class LoginPage {
     await loading.present();
 
     try {
-      // Usar await para esperar la promesa de getUsuario()
       const usuario = await this._usersLogin.getUsuario(this.userLogin.username);
       console.info(usuario);
 
@@ -66,7 +64,7 @@ export class LoginPage {
           console.info('Soy un admin');
           await this.modalCtrl.dismiss({
             userInfo: usuario,
-            redirectTo: 'lista-usuarios'
+            redirectTo: 'admin-tabs'
           });
         } else {
           console.info('Soy un usuario');
@@ -80,9 +78,8 @@ export class LoginPage {
       }
     } catch (error) {
       console.error('Error al obtener el usuario:', error);
-      await this.presentAlert(); // Muestra alerta si ocurre un error
+      await this.presentAlert();
     } finally {
-      // Asegúrate de cerrar el loading después del login
       await loading.dismiss();
     }
   }

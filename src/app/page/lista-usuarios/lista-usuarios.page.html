@@ -1,6 +1,6 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>Panel de Admin</ion-title>
+    <ion-title>Lista de Usuarios</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="goToHome()">
         Ver el home
@@ -27,7 +27,6 @@
             <h2>Nombre: {{ usuario.username }} <ion-icon name="person-circle-outline"></ion-icon></h2>
             <p>Contraseña: {{ usuario.password }}</p>
             <p>Rol: {{ usuario.role }}</p>
-            <p>Verificado: {{ usuario.isVerified ? 'Sí' : 'No' }}</p>
           </ion-label>
         </ion-item>
       </ng-container>
