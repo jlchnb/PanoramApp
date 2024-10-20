@@ -6,7 +6,7 @@ const routes: Routes = [
   {
     path: 'admin',
     canActivate: [isAdminGuard], // Aplica el guard para proteger esta ruta
-    loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule)
+    loadChildren: () => import('../../page/admin-tabs/admin-tabs.module').then(m => m.AdminTabsPageModule)
   },
   {
     path: 'login',
