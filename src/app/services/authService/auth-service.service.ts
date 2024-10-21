@@ -1,43 +1,64 @@
 import { Injectable } from '@angular/core';
 import { Preferences } from '@capacitor/preferences';
-import { environment } from 'src/environments/environment';
 import * as CryptoJS from 'crypto-js';
+import { environment } from 'src/environments/environment';
+import { Router } from '@angular/router';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthServiceService {
-
-  constructor() { }
+  constructor(private router: Router) {}
 
   async isDateExpired(): Promise<boolean> {
     const userData = await this.getDecryptedUserData();
-    if (userData?.expiration && Date.now() < userData.expiration) {
-        console.log("Usuario dentro del tiempo de expiración")
-        return true; // La sesión es válida si el tiempo actual es menor a la expiración
+  
+    // Si no hay datos de usuario, redirigir al welcome
+    if (!userData) {
+      console.log("No hay datos de usuario, redirigiendo a /welcome");
+      await this.logout(); // No hay datos, se considera que la sesión ha caducado
+      return true;
     }
-    console.log("Usuario fuera del tiempo de expiración")
+  
+    if (userData.role === 'anonymous') {
+      console.log('Usuario invitado, no aplicar expiración de sesión');
+      return false; // No expiramos la sesión de invitados
+    }
+  
+    if (userData.expiration && Date.now() < userData.expiration) {
+      console.log("Sesión válida: dentro del tiempo de expiración");
+      return false;  // Sesión válida, no ha expirado
+    }
+  
+    console.log("Sesión expirada o no hay información de expiración");
     await this.logout(); // Si ya pasó el tiempo, desloguea
-    return false;
+    return true; // La sesión ha expirado
   }
+  
+  
 
   async getDecryptedUserData() {
     const { value } = await Preferences.get({ key: 'userData' });
-    if (value) {
-      try {
-        console.log("try")
-        const bytes = CryptoJS.AES.decrypt(value, environment.secretKey);
-        const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-        return decryptedData;
-      } catch (e) {
-        console.log(e)
-        this.logout();
-      }
+
+    if (!value) {
+      console.log('No se encontraron datos de usuario');
+      return null;
     }
-    return null;
+
+    try {
+      const userData = JSON.parse(value);
+      console.log('Datos del usuario recuperados:', userData);
+      return userData;
+    } catch (error) {
+      console.error('Error al parsear los datos del usuario:', error);
+      return null;
+    }
   }
 
   async logout() {
+    console.log('Cerrando sesión y limpiando datos de usuario');
     await Preferences.remove({ key: 'userData' });
+    sessionStorage.removeItem('loggedUser'); // Asegúrate de limpiar también sessionStorage
+    this.router.navigate(['/welcome']);
   }
 }

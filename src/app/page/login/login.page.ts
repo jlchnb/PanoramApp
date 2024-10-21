@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ModalController, AlertController, LoadingController } from '@ionic/angular';
 import { Usuario } from 'src/app/models/Usuario';
 import { UsersService } from 'src/app/services/usuarios/users.service';
+import { Preferences } from '@capacitor/preferences';
 
 @Component({
   selector: 'app-login',
@@ -56,9 +57,16 @@ export class LoginPage {
       if (usuario && usuario.password === this.userLogin.password) {
         console.info(usuario, '¡Acceso concedido!');
 
-        if (usuario.username) {
-          sessionStorage.setItem('loggedUser', JSON.stringify(usuario));
-      }
+        const expirationTime = Date.now() + 3600000;
+        await Preferences.set({
+          key: 'userData',
+          value: JSON.stringify({ 
+            username: usuario.username, 
+            password: usuario.password, 
+            role: usuario.role, 
+            expiration: expirationTime 
+          })
+        });
 
         if (usuario.role === 'admin') {
           console.info('Soy un admin');

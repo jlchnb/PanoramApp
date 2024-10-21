@@ -24,6 +24,8 @@ export class HomePage implements OnInit {
     private router: Router
   ) {
     this.loggedUser = JSON.parse(sessionStorage.getItem('loggedUser') || '{"username": "", "role": "anonymous"}');
+    console.log('Usuario logueado:', this.loggedUser);
+
   }
 
   async ngOnInit() {
@@ -41,6 +43,7 @@ export class HomePage implements OnInit {
     } finally {
         loading.dismiss();
     }
+
     console.info('Usuario logueado:', this.loggedUser);
   }
 

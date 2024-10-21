@@ -3,18 +3,23 @@ import { CanActivateFn, Router } from '@angular/router';
 import { AuthServiceService } from 'src/app/services/authService/auth-service.service';
 
 export const isExpiredTimeGuard: CanActivateFn = async (route, state) => {
+  const _authService = inject(AuthServiceService);
+  const router = inject(Router);
 
+  const userData = await _authService.getDecryptedUserData();
 
-  const _authService = inject(AuthServiceService)
-
-  const router = inject(Router)
-
-  const userTimeExpired = await _authService.isDateExpired()
-
-  if(userTimeExpired){
-    return true
+  if (userData?.role === 'anonymous') {
+    return true;
   }
 
-  router.navigate(['/login']);
+  const userTimeExpired = await _authService.isDateExpired();
+
+  if (!userTimeExpired) {
+    console.log("Sesión válida");
+    return true;
+  }
+
+  console.log("Sesión expirada, redirigiendo a /welcome");
+  router.navigate(['/welcome']);
   return false;
 };

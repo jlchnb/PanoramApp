@@ -1,4 +1,5 @@
 <ion-app>
+  <!-- Menú lateral -->
   <ion-menu contentId="main-content">
     <ion-header>
       <ion-toolbar color="tertiary">
@@ -20,13 +21,14 @@
           Ajustes
         </ion-item>
         <ion-item *ngIf="loggedUser?.role === 'admin'" button (click)="goToAdminPanel()">
-          <ion-label>Admin Panel</ion-label>
+          <ion-icon name="shield-checkmark-outline" slot="start"></ion-icon>
+          Admin Panel
         </ion-item>
       </ion-list>
     </ion-content>
   </ion-menu>
-  
 
+  <!-- Contenido principal -->
   <div class="ion-page" id="main-content">
     <ion-header [translucent]="true">
       <ion-toolbar>
@@ -34,16 +36,17 @@
           <ion-menu-button></ion-menu-button>
         </ion-buttons>
         <ion-title>
-          Bienvenido {{ loggedUser.username }}
+          Bienvenido {{ loggedUser.role === 'anonymous' ? 'Invitado' : loggedUser.username }}
         </ion-title>
         <ion-buttons slot="end">
           <ion-button (click)="goToLogin()">
-            <ion-icon name='log-out-outline'></ion-icon>
+            <ion-icon name="log-out-outline"></ion-icon>
           </ion-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
 
+    <!-- Contenido dinámico -->
     <ion-content [fullscreen]="true">
       <ion-header collapse="condense">
         <ion-toolbar>
@@ -52,6 +55,7 @@
       </ion-header>
 
       <ion-grid>
+        <!-- Eventos principales (Ejemplo estático) -->
         <ion-row>
           <ion-col size="4">
             <ion-card class="event-card">
@@ -76,8 +80,9 @@
           </ion-col>
         </ion-row>
 
-        <ion-row *ngFor="let evento of eventos">
-          <ion-col size="12">
+        <!-- Eventos dinámicos -->
+        <ion-row *ngIf="eventos.length > 0; else noEventsTemplate">
+          <ion-col size="12" *ngFor="let evento of eventos">
             <ion-card>
               <ion-card-content>
                 <p><strong>Nombre:</strong> {{evento.nombre}}</p>
@@ -94,6 +99,19 @@
             </ion-card>
           </ion-col>
         </ion-row>
+
+        <!-- Plantilla para cuando no hay eventos -->
+        <ng-template #noEventsTemplate>
+          <ion-row>
+            <ion-col size="12">
+              <ion-card>
+                <ion-card-content>
+                  <p>No hay eventos disponibles en este momento.</p>
+                </ion-card-content>
+              </ion-card>
+            </ion-col>
+          </ion-row>
+        </ng-template>
       </ion-grid>
     </ion-content>
   </div>
