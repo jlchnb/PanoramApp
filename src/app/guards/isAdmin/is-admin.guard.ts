@@ -9,12 +9,17 @@ export const isAdminGuard: CanActivateFn = async (route, state) => {
   const userInfo = await _authService.getDecryptedUserData();
 
   if (userInfo?.role === 'admin') {
+    console.log('uno, soy admin')
     return true;
   } else if (userInfo?.role === 'user' || userInfo?.role === 'anonymous') {
-    router.navigate(['/home']);
+    // router.navigate(['/home']);
+    // if(router.url !== home) router.navigate(/home)
+    console.log(router.url,'dos, yendo al home')
     return false;
   }
 
   router.navigate(['/login']);
+  console.log('tres, vuelta al login')
   return false;
+  
 };
