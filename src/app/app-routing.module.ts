@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { isAdminGuard } from './guards/isAdmin/is-admin.guard';
+import { isExpiredTimeGuard } from './guards/isExpiredTime/is-expired-time.guard';
 
 const routes: Routes = [
   {
@@ -9,7 +11,8 @@ const routes: Routes = [
   },
   {
     path: 'home',
-    loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
+    loadChildren: () => import('./home/home.module').then( m => m.HomePageModule),
+    canActivate: [isAdminGuard, isExpiredTimeGuard]
   },
   {
     path: 'login',
