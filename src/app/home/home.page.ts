@@ -15,7 +15,8 @@ export class HomePage implements OnInit {
   isTodayEventVisible: boolean = true;
   eventos: Evento[] = [];
   usuarios: Usuario[] = [];
-  loggedUser: Usuario = { username: '', role: 'anonymous' }; // Valor por defecto
+  loggedUser: Usuario = JSON.parse(sessionStorage.getItem('Hola') || '{}' ) || {username: 'julito', role: 'admin'};
+  
 
   constructor(
     private navCtrl: NavController, 
@@ -25,11 +26,10 @@ export class HomePage implements OnInit {
   ) {}
 
   async ngOnInit() {
-    // Obtiene el usuario del sessionStorage en ngOnInit
     const storedUser = sessionStorage.getItem('loggedUser');
-    if (storedUser) {
-      this.loggedUser = JSON.parse(storedUser);
-    }
+    // if (storedUser) {
+    //   this.loggedUser = JSON.parse(storedUser);
+    // }
     console.log('Usuario logueado:', this.loggedUser);
 
     const loading = await this.loadingController.create({
@@ -49,8 +49,8 @@ export class HomePage implements OnInit {
   }
 
   goToLogin() {
-    sessionStorage.removeItem('loggedUser');
-    this.loggedUser = { username: '', role: 'anonymous' }; // Resetear loggedUser
+    sessionStorage.removeItem('Hola');
+    // sessionStorage.removeItem('loggedUser');
     this.navCtrl.navigateForward('/welcome');
   }
 

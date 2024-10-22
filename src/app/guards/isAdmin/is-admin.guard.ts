@@ -13,7 +13,7 @@ export const isAdminGuard: CanActivateFn = async (route, state) => {
     return true;
   } else if (userInfo?.role === 'user' || userInfo?.role === 'anonymous') {
     // router.navigate(['/home']);
-    // if(router.url !== home) router.navigate(/home)
+    if(router.url !== '/home') router.navigate(['/home'])
     console.log(router.url,'dos, yendo al home')
     return false;
   }

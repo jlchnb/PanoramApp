@@ -1,5 +1,4 @@
 <ion-app>
-  <!-- Menú lateral -->
   <ion-menu contentId="main-content">
     <ion-header>
       <ion-toolbar color="tertiary">
@@ -28,7 +27,6 @@
     </ion-content>
   </ion-menu>
 
-  <!-- Contenido principal -->
   <div class="ion-page" id="main-content">
     <ion-header [translucent]="true">
       <ion-toolbar>
@@ -46,7 +44,6 @@
       </ion-toolbar>
     </ion-header>
 
-    <!-- Contenido dinámico -->
     <ion-content [fullscreen]="true">
       <ion-header collapse="condense">
         <ion-toolbar>
@@ -55,7 +52,6 @@
       </ion-header>
 
       <ion-grid>
-        <!-- Eventos principales (Ejemplo estático) -->
         <ion-row>
           <ion-col size="4">
             <ion-card class="event-card">
@@ -80,7 +76,6 @@
           </ion-col>
         </ion-row>
 
-        <!-- Eventos dinámicos -->
         <ion-row *ngIf="eventos.length > 0; else noEventsTemplate">
           <ion-col size="12" *ngFor="let evento of eventos">
             <ion-card>
@@ -100,7 +95,6 @@
           </ion-col>
         </ion-row>
 
-        <!-- Plantilla para cuando no hay eventos -->
         <ng-template #noEventsTemplate>
           <ion-row>
             <ion-col size="12">

@@ -52,8 +52,8 @@ export class LoginPage {
 
     try {
       const usuario = await this._usersLogin.getUsuario(this.userLogin.username);
-      console.info(usuario);
-
+      console.info('Aqui el usuario',usuario);
+      sessionStorage.setItem('Hola', JSON.stringify(usuario)) 
       if (usuario && usuario.password === this.userLogin.password) {
         console.info(usuario, '¡Acceso concedido!');
 
