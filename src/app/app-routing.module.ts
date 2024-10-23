@@ -34,6 +34,30 @@ const routes: Routes = [
     path: 'register',
     loadChildren: () => import('./page/register/register.module').then( m => m.RegisterPageModule)
   },
+  {
+    path: 'mapa',
+    loadChildren: () => import('./page/mapa/mapa.module').then( m => m.MapaPageModule)
+  },
+  {
+    path: 'user-profile',
+    loadChildren: () => import('./page/user-profile/user-profile.module').then( m => m.UserProfilePageModule)
+  },
+  {
+    path: 'crear-usuario',
+    loadChildren: () => import('./page/crear-usuario/crear-usuario.module').then( m => m.CrearUsuarioPageModule)
+  },
+  {
+    path: 'editar-usuario',
+    loadChildren: () => import('./page/editar-usuario/editar-usuario.module').then( m => m.EditarUsuarioPageModule)
+  },
+  {
+    path: 'crear-evento',
+    loadChildren: () => import('./page/crear-evento/crear-evento.module').then( m => m.CrearEventoPageModule)
+  },
+  {
+    path: 'editar-evento',
+    loadChildren: () => import('./page/editar-evento/editar-evento.module').then( m => m.EditarEventoPageModule)
+  },
 
 
 ];

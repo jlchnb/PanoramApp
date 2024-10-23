@@ -6,8 +6,6 @@ import { Usuario } from '../models/Usuario';
 import { Router } from '@angular/router';
 import { Share } from '@capacitor/share';
 
-
-
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -29,12 +27,13 @@ export class HomePage implements OnInit {
 
   async ShareEvent() {
     await Share.share({
-      title: 'See cool stuff',
-      text: 'Pasate por mi app',
-      url: 'https://panoramapp.cl/',
-      dialogTitle: 'Share with buddies',
+      title: 'PanoramApp link para amigos',
+      text: 'Pasate por mi app ;)',
+      url: 'https://github.com/jlchnb/PanoramApp',
+      dialogTitle: 'Comparte con amigos',
     });
   }
+  
 
   async ngOnInit() {
     this.loggedUser = JSON.parse(sessionStorage.getItem('userkey') || '{}' );
@@ -62,16 +61,18 @@ export class HomePage implements OnInit {
   }
 
   goToPerfil() {
-    console.log('Navegando a Perfil');
+    console.log('Contenido del sessionStorage antes de navegar:', sessionStorage.getItem('userkey'));
+    this.navCtrl.navigateForward('/user-profile');
   }
 
-  goToEventos() {
+  goToMaps() {
     console.log('Navegando a Eventos');
+    this.navCtrl.navigateForward('/mapa');
   }
 
-  goToAjustes() {
-    console.log('Navegando a Ajustes');
-  }
+  // goToAjustes() {
+  //   console.log('Navegando a Ajustes');
+  // }
 
   goToAdminPanel() {
     if (this.loggedUser?.role === 'admin') {

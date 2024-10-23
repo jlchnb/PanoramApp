@@ -1,0 +1,34 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Crear Usuario</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item>
+      <ion-label position="floating">Nombre de Usuario</ion-label>
+      <ion-input [(ngModel)]="newUser.username" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Contraseña</ion-label>
+      <ion-input [(ngModel)]="newUser.password" type="password" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Rol</ion-label>
+      <ion-select [(ngModel)]="newUser.role">
+        <ion-select-option value="admin">Admin</ion-select-option>
+        <ion-select-option value="user">User</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Verificado</ion-label>
+      <ion-toggle [(ngModel)]="newUser.isVerified"></ion-toggle>
+    </ion-item>
+
+    <ion-button expand="block" (click)="crearUsuario()">Crear Usuario</ion-button>
+  </ion-list>
+</ion-content>

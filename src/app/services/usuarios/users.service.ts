@@ -6,7 +6,6 @@ import { supabase } from '../supabase/supabase.service';
   providedIn: 'root'
 })
 export class UsersService {
-
   constructor() { }
 
   async validar_usuario(usuario: Usuario): Promise<boolean> {
@@ -59,12 +58,34 @@ export class UsersService {
     const { data, error } = await supabase
       .from('usuarios')
       .select('*');
-
     if (error) {
       console.error('Error al obtener todos los usuarios:', error);
       return [];
     }
-
     return data as Usuario[];
+  }
+
+  async deleteUser(username: string): Promise<void> {
+    const { error } = await supabase
+      .from('usuarios')
+      .delete()
+      .eq('username', username);
+    if (error) {
+      console.error('Error al eliminar usuario:', error);
+      throw error;
+    } else {
+      console.log(`Usuario ${username} eliminado de la base de datos.`);
+    }
+  }
+
+  async createUser(usuario: Usuario): Promise<any> {
+    const { data, error } = await supabase
+      .from('usuarios')
+      .insert([usuario]);
+    if (error) {
+      console.error('Error al crear usuario:', error);
+      throw new Error(error.message);
+    }
+    return data;
   }
 }

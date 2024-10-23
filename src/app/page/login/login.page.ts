@@ -66,7 +66,7 @@ export class LoginPage {
         });
 
         const storedData = await this.authService.getUserData();
-        sessionStorage.setItem('userkey', JSON.stringify(storedData))
+        sessionStorage.setItem('userkey', JSON.stringify(storedData));
         console.log('Datos descifrados:', storedData);
 
         if (usuario.role === 'admin') {

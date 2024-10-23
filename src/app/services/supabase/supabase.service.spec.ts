@@ -5,8 +5,8 @@ import { createClient } from '@supabase/supabase-js';
   providedIn: 'root',
 })
 export class SupabaseService {
-  private supabaseUrl = 'https://<your-supabase-url>'; // Reemplaza con tu URL de Supabase
-  private supabaseKey = 'YOUR_ANON_KEY'; // Reemplaza con tu clave anónima
+  private supabaseUrl = 'https://<your-supabase-url>';
+  private supabaseKey = 'YOUR_ANON_KEY';
   public supabase = createClient(this.supabaseUrl, this.supabaseKey);
 
   constructor() {}

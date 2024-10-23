@@ -11,16 +11,12 @@
           <ion-icon name="person-circle-outline" slot="start" class="black-icon"></ion-icon>
           Perfil
         </ion-item>
-        <ion-item button (click)="goToEventos()">
-          <ion-icon name="calendar-outline" slot="start" class="black-icon"></ion-icon>
-          Eventos
-        </ion-item>
-        <ion-item button (click)="goToAjustes()">
-          <ion-icon name="settings-outline" slot="start" class="black-icon"></ion-icon>
-          Ajustes
+        <ion-item button (click)="goToMaps()">
+          <ion-icon name="map-outline" slot="start" class="black-icon"></ion-icon>
+          Mapa
         </ion-item>
         <ion-item *ngIf="loggedUser?.role === 'admin'" button (click)="goToAdminPanel()">
-          <ion-icon name="shield-checkmark-outline" slot="start"></ion-icon>
+          <ion-icon name="cube-sharp" color='black' slot="start"></ion-icon>
           Admin Panel
         </ion-item>
       </ion-list>
