@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { ModalController, AlertController, LoadingController } from '@ionic/angular';
 import { Usuario } from 'src/app/models/Usuario';
 import { UsersService } from 'src/app/services/usuarios/users.service';
-import { Preferences } from '@capacitor/preferences';
+import { AuthServiceService } from 'src/app/services/authService/auth-service.service';
 
 @Component({
   selector: 'app-login',
@@ -13,14 +13,15 @@ export class LoginPage {
   userLogin: Usuario = {
     username: '',
     password: '',
-    role: 'admin'
+    role: 'user'
   };
 
   constructor(
     private alertController: AlertController,
     private _usersLogin: UsersService,
     private modalCtrl: ModalController,
-    private loadingController: LoadingController
+    private loadingController: LoadingController,
+    private authService: AuthServiceService
   ) { }
 
   async presentAlert() {
@@ -38,7 +39,6 @@ export class LoginPage {
 
   async login() {
     console.info('Datos de login:', this.userLogin);
-
     if (!this.userLogin.username) {
       await this.presentAlert();
       return;
@@ -52,21 +52,22 @@ export class LoginPage {
 
     try {
       const usuario = await this._usersLogin.getUsuario(this.userLogin.username);
-      console.info('Aqui el usuario',usuario);
-      sessionStorage.setItem('Hola', JSON.stringify(usuario)) 
+      console.info('Usuario encontrado:', usuario);
+
       if (usuario && usuario.password === this.userLogin.password) {
         console.info(usuario, '¡Acceso concedido!');
 
         const expirationTime = Date.now() + 3600000;
-        await Preferences.set({
-          key: 'userData',
-          value: JSON.stringify({ 
-            username: usuario.username, 
-            password: usuario.password, 
-            role: usuario.role, 
-            expiration: expirationTime 
-          })
+        await this.authService.saveUserData({
+          username: usuario.username,
+          password: usuario.password,
+          role: usuario.role,
+          expiration: expirationTime
         });
+
+        const storedData = await this.authService.getUserData();
+        sessionStorage.setItem('userkey', JSON.stringify(storedData))
+        console.log('Datos descifrados:', storedData);
 
         if (usuario.role === 'admin') {
           console.info('Soy un admin');

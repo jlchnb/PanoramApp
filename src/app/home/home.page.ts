@@ -4,6 +4,9 @@ import { EventosService } from '../services/eventos/eventos.service';
 import { Evento } from '../models/Evento';
 import { Usuario } from '../models/Usuario';
 import { Router } from '@angular/router';
+import { Share } from '@capacitor/share';
+
+
 
 @Component({
   selector: 'app-home',
@@ -15,21 +18,26 @@ export class HomePage implements OnInit {
   isTodayEventVisible: boolean = true;
   eventos: Evento[] = [];
   usuarios: Usuario[] = [];
-  loggedUser: Usuario = JSON.parse(sessionStorage.getItem('Hola') || '{}' ) || {username: 'julito', role: 'admin'};
-  
+  loggedUser: Usuario = {username: 'julito', role: 'admin'};
 
   constructor(
     private navCtrl: NavController, 
     private eventosService: EventosService,
     private loadingController: LoadingController,
-    private router: Router
+    private router: Router,
   ) {}
 
+  async ShareEvent() {
+    await Share.share({
+      title: 'See cool stuff',
+      text: 'Pasate por mi app',
+      url: 'https://panoramapp.cl/',
+      dialogTitle: 'Share with buddies',
+    });
+  }
+
   async ngOnInit() {
-    const storedUser = sessionStorage.getItem('loggedUser');
-    // if (storedUser) {
-    //   this.loggedUser = JSON.parse(storedUser);
-    // }
+    this.loggedUser = JSON.parse(sessionStorage.getItem('userkey') || '{}' );
     console.log('Usuario logueado:', this.loggedUser);
 
     const loading = await this.loadingController.create({
@@ -49,8 +57,7 @@ export class HomePage implements OnInit {
   }
 
   goToLogin() {
-    sessionStorage.removeItem('Hola');
-    // sessionStorage.removeItem('loggedUser');
+    sessionStorage.removeItem('userkey');
     this.navCtrl.navigateForward('/welcome');
   }
 

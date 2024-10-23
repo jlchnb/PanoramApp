@@ -30,7 +30,11 @@ const routes: Routes = [
   {
     path: 'lista-eventos',
     loadChildren: () => import('./page/lista-eventos/lista-eventos.module').then( m => m.ListaEventosPageModule)
+  },  {
+    path: 'register',
+    loadChildren: () => import('./page/register/register.module').then( m => m.RegisterPageModule)
   },
+
 
 ];
 

@@ -3,7 +3,6 @@ import { ModalController } from '@ionic/angular';
 import { LoginPage } from '../login/login.page';
 import { Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
-import { Preferences } from '@capacitor/preferences';
 
 @Component({
   selector: 'app-welcome',
@@ -51,9 +50,11 @@ export class WelcomePage implements OnInit {
       role: 'anonymous',
     };
   
-    sessionStorage.setItem('loggedUser', JSON.stringify(invitado));
-  
-    // Redirigir directamente al home
+    sessionStorage.setItem('userkey', JSON.stringify(invitado));
     this.navCtrl.navigateForward('/home');
+  }
+
+  goToRegister() {
+    this.router.navigate(['/register']);
   }
 }

@@ -6,6 +6,9 @@ export const isExpiredTimeGuard: CanActivateFn = async (route, state) => {
   const _authService = inject(AuthServiceService);
   const router = inject(Router);
 
+  const storedData = await _authService.getUserData();
+  console.log('Datos descifrados:', storedData);
+
   const userData = await _authService.getDecryptedUserData();
 
   if (userData?.role === 'anonymous') {

@@ -38,7 +38,7 @@
         </ion-title>
         <ion-buttons slot="end">
           <ion-button (click)="goToLogin()">
-            <ion-icon name="log-out-outline"></ion-icon>
+            <ion-icon name="log-out-outline" size="large"></ion-icon>
           </ion-button>
         </ion-buttons>
       </ion-toolbar>
@@ -84,10 +84,13 @@
                 <p><strong>Hora:</strong> {{evento.fecha | date: 'shortTime'}} hrs</p>
                 <p><strong>Ubicación:</strong> {{evento.ubicacion}}</p>
                 <p><strong>Categoría:</strong></p>
-                <div class="categorias">
-                  <ion-chip *ngFor="let categoria of evento.categorias" [ngClass]="categoria.toLowerCase()">
-                    {{categoria}}
-                  </ion-chip>
+                <div class="piscola">
+                  <div class="categorias">
+                    <ion-chip *ngFor="let categoria of evento.categorias" [ngClass]="categoria.toLowerCase()">
+                      {{categoria}}
+                    </ion-chip>
+                  </div>
+                  <div class="sharebutton" button (click)="ShareEvent()"><ion-icon name="share-outline" size="large"></ion-icon></div>
                 </div>
                 <img [src]="'assets/images/' + evento.imagen" alt="{{ evento.nombre }}">
               </ion-card-content>

@@ -3,6 +3,7 @@ import { Preferences } from '@capacitor/preferences';
 import * as CryptoJS from 'crypto-js';
 import { environment } from 'src/environments/environment';
 import { Router } from '@angular/router';
+import { supabase } from '../supabase/supabase.service';
 
 @Injectable({
   providedIn: 'root',
@@ -10,9 +11,42 @@ import { Router } from '@angular/router';
 export class AuthServiceService {
   constructor(private router: Router) {}
 
+  async saveUserData(userData: any){
+    console.log('Datos del usuario antes de cifrar:', userData);
+    const encryptedData = this.encryptData(JSON.stringify(userData));
+    console.log('Datos cifrados:', encryptedData);
+    await Preferences.set({
+      key: 'userData',
+      value: encryptedData
+    });
+  }
+
+  async getUserData() {
+    const { value } = await Preferences.get({ key: 'userData' });
+    if (value) {
+        try {
+            const decryptedData = this.decryptData(value);
+            console.log("Datos desencriptados:", decryptedData);
+            return JSON.parse(decryptedData); 
+        } catch (error) {
+            console.error("Error al parsear los datos desencriptados:", error);
+            return null;
+        }
+    }
+    return null;
+  }
+
+  encryptData(data: string): string {
+    return CryptoJS.AES.encrypt(data, environment.secretKey).toString();
+  }
+
+  decryptData(encryptedData: string): string {
+    const bytes = CryptoJS.AES.decrypt(encryptedData, environment.secretKey);
+    return bytes.toString(CryptoJS.enc.Utf8);
+  }
+
   async isDateExpired(): Promise<boolean> {
-    const userData = await this.getDecryptedUserData();
-  
+    const userData = await this.getUserData();
     if (!userData) {
       console.log("No hay datos de usuario, redirigiendo a /welcome");
       await this.logout();
@@ -34,8 +68,6 @@ export class AuthServiceService {
     return true;
   }
   
-  
-
   async getDecryptedUserData() {
     const { value } = await Preferences.get({ key: 'userData' });
 
@@ -59,5 +91,25 @@ export class AuthServiceService {
     await Preferences.remove({ key: 'userData' });
     sessionStorage.removeItem('loggedUser');
     this.router.navigate(['/welcome']);
+  }
+
+  async registerUser(user: { username: string; password: string; role: string }) {
+    const hola = await supabase
+      .from('usuarios')
+      .insert([
+        { username: user.username, password: user.password, role: user.role }
+      ])
+      .single();
+
+      const { data, error } = await supabase
+      .from('usuarios')
+      .select('*')
+      .eq('username', user.username)
+      .single();
+    if (error) {
+      throw error;
+    }
+    console.log("soy la data",data);
+    return data;
   }
 }
