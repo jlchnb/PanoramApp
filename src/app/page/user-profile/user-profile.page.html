@@ -11,7 +11,9 @@
   <div class="ion-text-center">
     <ion-icon name="person-circle-outline" style="font-size: 150px; color: rgb(0, 0, 0);"></ion-icon>
     <h2><u>Usuario:</u> {{ loggedUser.username }}</h2>
-    <h2><u>Correo:</u> proximamente</h2>
+    <h2><u>Correo:</u> {{ loggedUser.email || 'No disponible' }}</h2>
+    <h2><u>Nombre Completo:</u> {{ loggedUser.fullName || 'No disponible' }}</h2>
+    <h2><u>Fecha de Nacimiento:</u> {{ loggedUser.birthDate || 'No disponible' }}</h2>
   </div>
   <ion-button expand="block" color="danger" (click)="confirmDelete()">Eliminar Usuario</ion-button>
 </ion-content>

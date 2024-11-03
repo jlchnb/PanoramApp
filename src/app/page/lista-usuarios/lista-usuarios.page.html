@@ -22,9 +22,13 @@
       <ng-container *ngFor="let usuario of usuarios">
         <ion-item>
           <ion-label>
-            <h2>Nombre: {{ usuario.username }} <ion-icon name="person-circle-outline"></ion-icon></h2>
+            <h2>Usuario: {{ usuario.username }} <ion-icon name="person-circle-outline"></ion-icon></h2>
+            <p>Nombre: {{ usuario.fullName }}</p>
             <p>Contraseña: {{ usuario.password }}</p>
             <p>Rol: {{ usuario.role }}</p>
+            <p>Correo: {{ usuario.email }}</p>
+            <p>Fecha Nac: {{ usuario.birthDate }}</p>
+            <p></p>
           </ion-label>
           <ion-button color="primary" (click)="editarUsuario(usuario)">Editar</ion-button>
           <ion-button color="danger" (click)="eliminarUsuario(usuario)">Eliminar</ion-button>

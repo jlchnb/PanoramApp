@@ -13,6 +13,9 @@ export class RegisterPage {
     username: '',
     password: '',
     role: 'user',
+    fullName: '',
+    email: '',
+    birthDate: ''  // Date format as 'YYYY-MM-DD'
   };
 
   constructor(private router: Router, private authService: AuthServiceService) {}
@@ -33,5 +36,5 @@ export class RegisterPage {
     } catch (error) {
         console.error('Error al registrar el usuario:', error);
     }
-}
+  }
 }

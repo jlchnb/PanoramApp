@@ -70,10 +70,6 @@ export class HomePage implements OnInit {
     this.navCtrl.navigateForward('/mapa');
   }
 
-  // goToAjustes() {
-  //   console.log('Navegando a Ajustes');
-  // }
-
   goToAdminPanel() {
     if (this.loggedUser?.role === 'admin') {
       this.router.navigate(['/admin-tabs']);

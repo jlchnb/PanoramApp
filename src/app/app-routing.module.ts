@@ -30,7 +30,8 @@ const routes: Routes = [
   {
     path: 'lista-eventos',
     loadChildren: () => import('./page/lista-eventos/lista-eventos.module').then( m => m.ListaEventosPageModule)
-  },  {
+  },
+  {
     path: 'register',
     loadChildren: () => import('./page/register/register.module').then( m => m.RegisterPageModule)
   },
@@ -47,8 +48,8 @@ const routes: Routes = [
     loadChildren: () => import('./page/crear-usuario/crear-usuario.module').then( m => m.CrearUsuarioPageModule)
   },
   {
-    path: 'editar-usuario',
-    loadChildren: () => import('./page/editar-usuario/editar-usuario.module').then( m => m.EditarUsuarioPageModule)
+    path: 'editar-usuario/:username',
+    loadChildren: () => import('./page/editar-usuario/editar-usuario.module').then(m => m.EditarUsuarioPageModule)
   },
   {
     path: 'crear-evento',

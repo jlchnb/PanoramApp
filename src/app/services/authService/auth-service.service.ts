@@ -93,23 +93,40 @@ export class AuthServiceService {
     this.router.navigate(['/welcome']);
   }
 
-  async registerUser(user: { username: string; password: string; role: string }) {
-    const hola = await supabase
+  async registerUser(user: { username: string; password: string; role: string; email: string; fullName: string; birthDate: string }) {
+    const { data: insertedData, error: insertError } = await supabase
       .from('usuarios')
       .insert([
-        { username: user.username, password: user.password, role: user.role }
+        {
+          username: user.username,
+          password: user.password,
+          role: user.role,
+          email: user.email,
+          fullName: user.fullName,
+          birthDate: user.birthDate
+        }
       ])
       .single();
-
-      const { data, error } = await supabase
+  
+    if (insertError) {
+      console.error('Error al registrar usuario:', insertError);
+      throw insertError;
+    }
+  
+    console.log('Usuario registrado correctamente:', insertedData);
+  
+    const { data, error } = await supabase
       .from('usuarios')
       .select('*')
       .eq('username', user.username)
       .single();
+  
     if (error) {
+      console.error('Error al obtener datos del usuario después de la inserción:', error);
       throw error;
     }
-    console.log("soy la data",data);
+  
+    console.log("Datos del usuario registrados:", data);
     return data;
   }
-}
+}  

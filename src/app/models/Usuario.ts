@@ -1,6 +1,10 @@
 export interface Usuario {
-    username?: string;
-    password?: string;
-    role: 'admin' | 'user' | 'anonymous';
-    isVerified?: boolean;
-  }
+  id?: string;
+  username?: string;
+  password?: string;
+  role: 'admin' | 'user' | 'anonymous';
+  isVerified?: boolean;
+  email?: string;
+  fullName?: string;
+  birthDate?: Date;
+}
