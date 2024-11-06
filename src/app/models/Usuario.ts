@@ -6,5 +6,5 @@ export interface Usuario {
   isVerified?: boolean;
   email?: string;
   fullName?: string;
-  birthDate?: Date;
+  birthDate?: Date | null;
 }

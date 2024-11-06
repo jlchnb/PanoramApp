@@ -13,7 +13,10 @@ export class LoginPage {
   userLogin: Usuario = {
     username: '',
     password: '',
-    role: 'user'
+    role: 'user',
+    fullName: '',
+    email: '',
+    birthDate: null
   };
 
   constructor(
@@ -62,7 +65,10 @@ export class LoginPage {
           username: usuario.username,
           password: usuario.password,
           role: usuario.role,
-          expiration: expirationTime
+          email: usuario.email,
+          fullName: usuario.fullName,
+          brithDate: usuario.birthDate,
+          expiration: expirationTime,
         });
 
         const storedData = await this.authService.getUserData();

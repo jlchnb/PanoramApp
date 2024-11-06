@@ -30,8 +30,8 @@
             <p>Fecha Nac: {{ usuario.birthDate }}</p>
             <p></p>
           </ion-label>
-          <ion-button color="primary" (click)="editarUsuario(usuario)">Editar</ion-button>
-          <ion-button color="danger" (click)="eliminarUsuario(usuario)">Eliminar</ion-button>
+          <ion-button color="primary" (click)="editarUsuario(usuario)"><ion-icon name="create-outline"></ion-icon></ion-button>
+          <ion-button color="danger" (click)="eliminarUsuario(usuario)"><ion-icon name="trash-outline"></ion-icon></ion-button>
         </ion-item>
       </ng-container>
     </ion-list>
