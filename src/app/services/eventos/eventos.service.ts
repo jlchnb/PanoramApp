@@ -19,14 +19,24 @@ export class EventosService {
       return [];
     }
     
-    return data as Evento[];
+    const eventos = data.map(evento => ({
+      ...evento,
+      fecha: new Date(evento.fecha)
+    }));
+  
+    return eventos as Evento[];
   }
 
   async crearEvento(evento: Evento): Promise<void> {
+    const eventoTransformado = {
+      ...evento,
+      fecha: evento.fecha.toISOString().split('T')[0]
+    };
+  
     const { error } = await supabase
       .from('eventos')
-      .insert(evento);
-
+      .insert(eventoTransformado);
+  
     if (error) {
       console.error('Error al crear el evento:', error);
     }

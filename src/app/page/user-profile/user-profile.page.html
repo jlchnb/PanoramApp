@@ -8,12 +8,36 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  <div class="ion-text-center">
-    <ion-icon name="person-circle-outline" style="font-size: 150px; color: rgb(0, 0, 0);"></ion-icon>
-    <h2><u>Usuario:</u> {{ loggedUser.username }}</h2>
-    <h2><u>Correo:</u> {{ loggedUser.email || 'No disponible' }}</h2>
-    <h2><u>Nombre Completo:</u> {{ loggedUser.fullName || 'No disponible' }}</h2>
-    <h2><u>Fecha de Nacimiento:</u> {{ loggedUser.birthDate || 'No disponible' }}</h2>
+  <div class="profile-container">
+    <ion-icon name="person-circle-outline" class="profile-icon"></ion-icon>
+
+    <!-- Mostrar el botón de registrarse si el rol es 'anonymous' -->
+    <div *ngIf="loggedUser.role === 'anonymous'; else profileContent">
+      <ion-button expand="block" color="primary" (click)="goToRegister()">Registrarse</ion-button>
+    </div>
+
+    <!-- Contenido del perfil, solo visible si el rol NO es 'anonymous' -->
+    <ng-template #profileContent>
+      <div class="profile-info">
+        <div class="profile-row">
+          <div class="profile-label">Usuario:</div>
+          <div class="profile-value">{{ loggedUser.username }}</div>
+        </div>
+        <div class="profile-row">
+          <div class="profile-label">Correo:</div>
+          <div class="profile-value">{{ loggedUser.email || 'No disponible' }}</div>
+        </div>
+        <div class="profile-row">
+          <div class="profile-label">Nombre Completo:</div>
+          <div class="profile-value">{{ loggedUser.fullName || 'No disponible' }}</div>
+        </div>
+        <div class="profile-row">
+          <div class="profile-label">Fecha de Nacimiento:</div>
+          <div class="profile-value">{{ loggedUser.birthDate || 'No disponible' }}</div>
+        </div>
+      </div>
+      <!-- Mostrar el botón de eliminar usuario solo si el rol NO es 'anonymous' -->
+      <ion-button expand="block" color="danger" (click)="confirmDelete()">Eliminar Usuario</ion-button>
+    </ng-template>
   </div>
-  <ion-button expand="block" color="danger" (click)="confirmDelete()">Eliminar Usuario</ion-button>
 </ion-content>

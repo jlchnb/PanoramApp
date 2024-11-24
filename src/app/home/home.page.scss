@@ -118,3 +118,21 @@ ion-menu::part(container) {
   width: 100%;
   justify-content: space-between;
 }
+
+.home-tabs {
+  background-color: #f5f5f5; /* Fondo gris claro para todo el segmento */
+  border-radius: 8px; /* Opcional: para redondear bordes */
+  padding: 4px; /* Opcional: agrega espacio alrededor */
+
+  ion-segment-button {
+    --background: #f5f5f5; /* Fondo gris claro para botones no seleccionados */
+    --color: #7a7a7a; /* Texto gris oscuro para botones no seleccionados */
+    border-radius: 6px; /* Opcional: redondear bordes de botones */
+
+    &.segment-button-checked {
+      --background: #ffffff; /* Fondo blanco para el botón seleccionado */
+      --color: #000; /* Texto negro para el botón seleccionado */
+      font-weight: bold; /* Opcional: resaltar el botón seleccionado */
+    }
+  }
+}

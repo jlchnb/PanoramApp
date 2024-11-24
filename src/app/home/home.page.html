@@ -16,7 +16,7 @@
           Mapa
         </ion-item>
         <ion-item *ngIf="loggedUser?.role === 'admin'" button (click)="goToAdminPanel()">
-          <ion-icon name="cube-sharp" color='black' slot="start"></ion-icon>
+          <ion-icon name="cube-sharp" color="black" slot="start"></ion-icon>
           Admin Panel
         </ion-item>
       </ion-list>
@@ -30,7 +30,7 @@
           <ion-menu-button></ion-menu-button>
         </ion-buttons>
         <ion-title>
-          Bienvenido {{ loggedUser.role === 'anonymous' ? 'Invitado' : loggedUser.username }}
+          {{ loggedUser.role === 'anonymous' ? 'Modo Invitado' : 'Bienvenido ' + loggedUser.username }}
         </ion-title>
         <ion-buttons slot="end">
           <ion-button (click)="goToLogin()">
@@ -40,53 +40,40 @@
       </ion-toolbar>
     </ion-header>
 
-    <ion-content [fullscreen]="true">
-      <ion-header collapse="condense">
-        <ion-toolbar>
-          <ion-title size="large"></ion-title>
-        </ion-toolbar>
-      </ion-header>
+    <ion-content>
+      <!-- Ion-segment para el filtro de eventos -->
+      <ion-segment value="estaSemana" (ionChange)="cambiarFiltro($event)" class="home-tabs">
+        <ion-segment-button value="estaSemana">
+          <ion-label>Esta semana</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="proximaSemana">
+          <ion-label>Proxima semana</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="subsiguienteSemana">
+          <ion-label>Semana subsiguiente</ion-label>
+        </ion-segment-button>
+      </ion-segment>
 
+      <!-- Eventos mostrados según el filtro -->
       <ion-grid>
-        <ion-row>
-          <ion-col size="4">
-            <ion-card class="event-card">
-              <ion-card-header>
-                <ion-card-title>HOY</ion-card-title>
-              </ion-card-header>
-            </ion-card>
-          </ion-col>
-          <ion-col size="4">
-            <ion-card class="event-card">
-              <ion-card-header>
-                <ion-card-title>2 de Febrero</ion-card-title>
-              </ion-card-header>
-            </ion-card>
-          </ion-col>
-          <ion-col size="4">
-            <ion-card class="event-card">
-              <ion-card-header>
-                <ion-card-title>3 de Febrero</ion-card-title>
-              </ion-card-header>
-            </ion-card>
-          </ion-col>
-        </ion-row>
-
-        <ion-row *ngIf="eventos.length > 0; else noEventsTemplate">
-          <ion-col size="12" *ngFor="let evento of eventos">
+        <ion-row *ngIf="eventosFiltrados.length > 0; else noEventsTemplate">
+          <ion-col size="12" *ngFor="let evento of eventosFiltrados">
             <ion-card>
               <ion-card-content>
-                <p><strong>Nombre:</strong> {{evento.nombre}}</p>
-                <p><strong>Hora:</strong> {{evento.fecha | date: 'shortTime'}} hrs</p>
-                <p><strong>Ubicación:</strong> {{evento.ubicacion}}</p>
-                <p><strong>Categoría:</strong></p>
+                <p><strong>Nombre:</strong> {{ evento.nombre }}</p>
+                <p><strong>Lugar:</strong> {{ evento.ubicacion }}</p>
                 <div class="piscola">
                   <div class="categorias">
                     <ion-chip *ngFor="let categoria of evento.categorias" [ngClass]="categoria.toLowerCase()">
-                      {{categoria}}
+                      {{ categoria }}
                     </ion-chip>
                   </div>
-                  <div class="sharebutton" button (click)="ShareEvent()"><ion-icon name="share-outline" size="large"></ion-icon></div>
+                  <div class="sharebutton" button (click)="ShareEvent()">
+                    <ion-icon name="share-outline" size="large"></ion-icon>
+                  </div>
+                  <div class="favorite-button" *ngIf="loggedUser?.role !== 'anonymous'" button (click)="toggleFavorite(evento)">
+                    <ion-icon [name]="isFavorite(evento) ? 'heart' : 'heart-outline'" size="large" color="danger"></ion-icon>
+                  </div>
                 </div>
                 <img [src]="'assets/images/' + evento.imagen" alt="{{ evento.nombre }}">
               </ion-card-content>
@@ -99,7 +86,7 @@
             <ion-col size="12">
               <ion-card>
                 <ion-card-content>
-                  <p>No hay eventos disponibles en este momento.</p>
+                  <p>No hay eventos disponibles para este período.</p>
                 </ion-card-content>
               </ion-card>
             </ion-col>

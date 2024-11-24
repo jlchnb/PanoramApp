@@ -7,4 +7,5 @@ export interface Usuario {
   email?: string;
   fullName?: string;
   birthDate?: Date | null;
+  favoritos?: number[];
 }

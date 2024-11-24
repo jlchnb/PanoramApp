@@ -117,4 +117,63 @@ export class UsersService {
     if (error) throw new Error(error.message);
     return data;
   }
+
+  async addToFavorites(usuario: Usuario, eventoId: number): Promise<Usuario> {
+    if (!usuario.favoritos) {
+      usuario.favoritos = [];
+    }
+  
+    // Verificar si el evento ya está en favoritos
+    if (!usuario.favoritos.includes(eventoId)) {
+      usuario.favoritos.push(eventoId); // Agregar a favoritos
+    }
+  
+    // Actualizar el usuario en la base de datos
+    const { data, error } = await supabase
+      .from('usuarios')
+      .update({ favoritos: usuario.favoritos })
+      .eq('id', usuario.id)
+      .select(); // Asegura que siempre haya datos retornados
+  
+    if (error) {
+      console.error('Error al agregar a favoritos:', error);
+      throw new Error(error.message);
+    }
+  
+    // Validar que `data` sea un array de usuarios
+    if (Array.isArray(data) && data.length > 0) {
+      return data[0] as Usuario; // Retornar el usuario actualizado
+    }
+  
+    throw new Error('No se pudo procesar la solicitud. Respuesta inesperada.');
+  }
+
+  // Función para eliminar un evento de favoritos
+  async removeFromFavorites(usuario: Usuario, eventoId: number): Promise<Usuario> {
+    if (!usuario.favoritos) {
+      usuario.favoritos = [];
+    }
+  
+    // Filtrar el evento del arreglo de favoritos
+    usuario.favoritos = usuario.favoritos.filter(id => id !== eventoId);
+  
+    // Actualizar el usuario en la base de datos
+    const { data, error } = await supabase
+      .from('usuarios')
+      .update({ favoritos: usuario.favoritos })
+      .eq('id', usuario.id)
+      .select(); // Asegura que siempre haya datos retornados
+  
+    if (error) {
+      console.error('Error al eliminar de favoritos:', error);
+      throw new Error(error.message);
+    }
+  
+    // Validar que `data` sea un array de usuarios
+    if (Array.isArray(data) && data.length > 0) {
+      return data[0] as Usuario; // Retornar el usuario actualizado
+    }
+  
+    throw new Error('No se pudo procesar la solicitud. Respuesta inesperada.');
+  }
 }
