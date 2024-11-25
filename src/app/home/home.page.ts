@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { Share } from '@capacitor/share';
 import { UsersService } from '../services/usuarios/users.service';
 import { Storage } from '@ionic/storage-angular';
+import { ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-home',
@@ -38,6 +39,7 @@ export class HomePage implements OnInit {
     private loadingController: LoadingController,
     private router: Router,
     private storage: Storage,
+    private toastController: ToastController
   ) {}
 
   async ShareEvent() {
@@ -80,14 +82,6 @@ export class HomePage implements OnInit {
     this.eventos = await this.eventosService.obtenerEventos();
   }
 
-  async addToFavorites(eventoId: number) {
-    this.loggedUser = await this.usersService.addToFavorites(this.loggedUser, eventoId);
-  }
-
-  async removeFromFavorites(eventoId: number) {
-    this.loggedUser = await this.usersService.removeFromFavorites(this.loggedUser, eventoId);
-  }
-
   async cargarEventos() {
     const eventosData = await this.eventosService.obtenerEventos();
     console.log(eventosData);
@@ -109,6 +103,16 @@ export class HomePage implements OnInit {
   goToMaps() {
     console.log('Navegando a Eventos');
     this.navCtrl.navigateForward('/mapa');
+  }
+
+  goToFavorites(){
+    console.log('Navegando a Favoritos');
+    this.navCtrl.navigateForward('/fav');
+  }
+
+  goToSettings() {
+    console.log('Navegando a configurar');
+    this.navCtrl.navigateForward('/settings');
   }
 
   goToAdminPanel() {
@@ -257,11 +261,36 @@ export class HomePage implements OnInit {
       const index = this.loggedUser.favoritos.indexOf(evento.id);
       if (index === -1) {
         this.loggedUser.favoritos.push(evento.id);
+        this.showToast('Agregado a favoritos');
       } else {
         this.loggedUser.favoritos.splice(index, 1);
+        this.showToast('Eliminado de favoritos');
       }
   
       localStorage.setItem('favoritos', JSON.stringify(this.loggedUser.favoritos));
     }
+  }
+
+  async showToast(message: string): Promise<void> {
+    const toast = await this.toastController.create({
+      message,
+      duration: 2000,
+      position: 'bottom',
+    });
+    await toast.present();
+  }
+
+  async addToFavorites(eventoId: number) {
+    this.loggedUser = await this.usersService.addToFavorites(this.loggedUser, eventoId);
+    const toast = await this.toastController.create({
+      message: 'Agregado a favoritos',
+      duration: 2000,
+      position: 'bottom',
+    });
+    await toast.present();
+  }
+
+  async removeFromFavorites(eventoId: number) {
+    this.loggedUser = await this.usersService.removeFromFavorites(this.loggedUser, eventoId);
   }
 }

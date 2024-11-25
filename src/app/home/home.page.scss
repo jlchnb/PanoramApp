@@ -136,3 +136,10 @@ ion-menu::part(container) {
     }
   }
 }
+
+.logout-button {
+  position: absolute;
+  bottom: 20px; /* Separación del borde inferior */
+  width: 100%; /* Asegura que se alinee con el resto del contenido */
+  text-align: center;
+}

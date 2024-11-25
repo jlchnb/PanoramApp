@@ -15,11 +15,25 @@
           <ion-icon name="map-outline" slot="start" class="black-icon"></ion-icon>
           Mapa
         </ion-item>
+        <ion-item *ngIf="loggedUser?.role !== 'anonymous'" button (click)="goToFavorites()">
+          <ion-icon name="bookmarks-outline" slot="start" class="black-icon"></ion-icon>
+          Favoritos
+        </ion-item>
+        <ion-item *ngIf="loggedUser?.role !== 'anonymous'" button (click)="goToSettings()">
+          <ion-icon name="settings-outline" slot="start" class="black-icon"></ion-icon>
+          Configuracion
+        </ion-item>
         <ion-item *ngIf="loggedUser?.role === 'admin'" button (click)="goToAdminPanel()">
           <ion-icon name="cube-sharp" color="black" slot="start"></ion-icon>
           Admin Panel
         </ion-item>
       </ion-list>
+      <div class="logout-button">
+        <ion-button expand="block" (click)="goToLogin()">
+          <ion-icon name="log-out-outline" size="large"></ion-icon>
+          Salir
+        </ion-button>
+      </div>
     </ion-content>
   </ion-menu>
 
@@ -32,11 +46,6 @@
         <ion-title>
           {{ loggedUser.role === 'anonymous' ? 'Modo Invitado' : 'Bienvenido ' + loggedUser.username }}
         </ion-title>
-        <ion-buttons slot="end">
-          <ion-button (click)="goToLogin()">
-            <ion-icon name="log-out-outline" size="large"></ion-icon>
-          </ion-button>
-        </ion-buttons>
       </ion-toolbar>
     </ion-header>
 
@@ -44,13 +53,13 @@
       <!-- Ion-segment para el filtro de eventos -->
       <ion-segment value="estaSemana" (ionChange)="cambiarFiltro($event)" class="home-tabs">
         <ion-segment-button value="estaSemana">
-          <ion-label>Esta semana</ion-label>
+          <ion-label>Esta<br>semana</ion-label>
         </ion-segment-button>
         <ion-segment-button value="proximaSemana">
-          <ion-label>Proxima semana</ion-label>
+          <ion-label>Proxima<br>semana</ion-label>
         </ion-segment-button>
         <ion-segment-button value="subsiguienteSemana">
-          <ion-label>Semana subsiguiente</ion-label>
+          <ion-label>Semana<br>subsiguiente</ion-label>
         </ion-segment-button>
       </ion-segment>
 
