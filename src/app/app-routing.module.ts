@@ -58,13 +58,10 @@ const routes: Routes = [
   {
     path: 'editar-evento',
     loadChildren: () => import('./page/editar-evento/editar-evento.module').then( m => m.EditarEventoPageModule)
-  },  {
-    path: 'fav',
-    loadChildren: () => import('./page/fav/fav.module').then( m => m.FavPageModule)
   },
   {
-    path: 'settings',
-    loadChildren: () => import('./page/settings/settings.module').then( m => m.SettingsPageModule)
+    path: 'fav',
+    loadChildren: () => import('./page/fav/fav.module').then( m => m.FavPageModule)
   },
 
 

@@ -1,4 +1,4 @@
-package io.ionic.starter;
+package com.julio.panoramapp;
 
 import com.getcapacitor.BridgeActivity;
 

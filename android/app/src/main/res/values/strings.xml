@@ -2,6 +2,6 @@
 <resources>
     <string name="app_name">PanoramApp</string>
     <string name="title_activity_main">PanoramApp</string>
-    <string name="package_name">io.ionic.starter</string>
-    <string name="custom_url_scheme">io.ionic.starter</string>
+    <string name="package_name">com.julio.panoramapp</string>
+    <string name="custom_url_scheme">com.julio.panoramapp</string>
 </resources>
