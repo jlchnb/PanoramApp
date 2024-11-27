@@ -3,6 +3,7 @@ import { ModalController } from '@ionic/angular';
 import { LoginPage } from '../login/login.page';
 import { Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
+import { Preferences } from '@capacitor/preferences';
 
 @Component({
   selector: 'app-welcome',
@@ -44,14 +45,22 @@ export class WelcomePage implements OnInit {
     return await modal.present();
   }
 
-  continueAsGuest() {
+  async continueAsGuest() {
     const invitado = {
       username: 'Invitado',
       role: 'anonymous',
+      favoritos: [],
     };
   
-    sessionStorage.setItem('userkey', JSON.stringify(invitado));
-    this.navCtrl.navigateForward('/home');
+    await Preferences.clear();
+    sessionStorage.clear();
+  
+    await Preferences.set({
+      key: 'userkey',
+      value: JSON.stringify(invitado),
+    });
+  
+    this.router.navigate(['/home']);
   }
 
   goToRegister() {

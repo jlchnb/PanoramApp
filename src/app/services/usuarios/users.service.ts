@@ -13,46 +13,53 @@ export class UsersService {
       .from('usuarios')
       .select('*')
       .eq('username', usuario.username)
-      .eq('password', usuario.password)
-      .single();
-
+      .eq('password', usuario.password);
+  
     if (error) {
       console.error('Error al validar usuario:', error);
       return false;
     }
-
-    return !!data;
-  }
+  
+    return data?.length === 1;
+  }  
 
   async esAdmin(usuario: Usuario): Promise<boolean> {
     const { data, error } = await supabase
       .from('usuarios')
-      .select('*')
-      .eq('username', usuario.username)
-      .single();
-
+      .select('role')
+      .eq('username', usuario.username);
+  
     if (error) {
       console.error('Error al verificar admin:', error);
       return false;
     }
-
-    return data?.role === 'admin';
-  }
+  
+    if (!data || data.length === 0) {
+      console.warn('Usuario no encontrado o no es admin.');
+      return false;
+    }
+  
+    return data[0].role === 'admin';
+  }  
 
   async getUsuario(username: string): Promise<Usuario | null> {
     const { data, error } = await supabase
       .from('usuarios')
-      .select('*')
-      .eq('username', username)
-      .single();
-
+      .select('id, username, password, email, fullName, favoritos, role, birthDate')
+      .eq('username', username);
+  
     if (error) {
       console.error('Error al obtener usuario:', error);
       return null;
     }
-
-    return data as Usuario;
-  }
+  
+    if (!data || data.length === 0) {
+      console.warn('Usuario no encontrado.');
+      return null;
+    }
+  
+    return data[0] as Usuario;
+  }  
 
   async getAllUsers(): Promise<Usuario[]> {
     const { data, error } = await supabase
@@ -104,7 +111,11 @@ export class UsersService {
     return data;
   }
 
-  async updateUser(usuario: Usuario) {
+  async updateUser(usuario: Usuario): Promise<Usuario | null> {
+    if (!usuario.id) {
+      throw new Error('ID del usuario requerido para actualizar datos.');
+    }
+  
     const { data, error } = await supabase
       .from('usuarios')
       .update({
@@ -112,68 +123,77 @@ export class UsersService {
         fullName: usuario.fullName,
         birthDate: usuario.birthDate,
       })
-      .eq('username', usuario.username);
+      .eq('id', usuario.id);
   
-    if (error) throw new Error(error.message);
-    return data;
+    if (error) {
+      console.error('Error al actualizar usuario:', error);
+      throw new Error(error.message);
+    }
+  
+    return data ? data[0] as Usuario : null;
   }
+  
 
-  async addToFavorites(usuario: Usuario, eventoId: number): Promise<Usuario> {
-    if (!usuario.favoritos) {
-      usuario.favoritos = [];
+  async addToFavorites(usuario: Usuario, eventoId: string): Promise<Usuario> {
+    if (!usuario.id) {
+      throw new Error('ID del usuario requerido para actualizar favoritos.');
+    }
+    
+    const { data: existingUser, error: fetchError } = await supabase
+      .from('usuarios')
+      .select('favoritos')
+      .eq('id', usuario.id)
+      .single();
+  
+    if (fetchError || !existingUser) {
+      throw new Error('Usuario no encontrado o error al obtener datos.');
     }
   
-    // Verificar si el evento ya está en favoritos
-    if (!usuario.favoritos.includes(eventoId)) {
-      usuario.favoritos.push(eventoId); // Agregar a favoritos
+    const favoritos = existingUser.favoritos || [];
+    if (!favoritos.includes(eventoId)) {
+      favoritos.push(eventoId);
     }
   
-    // Actualizar el usuario en la base de datos
     const { data, error } = await supabase
       .from('usuarios')
-      .update({ favoritos: usuario.favoritos })
-      .eq('id', usuario.id)
-      .select(); // Asegura que siempre haya datos retornados
+      .update({ favoritos })
+      .eq('id', usuario.id);
   
     if (error) {
       console.error('Error al agregar a favoritos:', error);
       throw new Error(error.message);
     }
   
-    // Validar que `data` sea un array de usuarios
-    if (Array.isArray(data) && data.length > 0) {
-      return data[0] as Usuario; // Retornar el usuario actualizado
-    }
-  
-    throw new Error('No se pudo procesar la solicitud. Respuesta inesperada.');
-  }
+    return { ...usuario, favoritos } as Usuario;
+  }  
 
-  // Función para eliminar un evento de favoritos
-  async removeFromFavorites(usuario: Usuario, eventoId: number): Promise<Usuario> {
-    if (!usuario.favoritos) {
-      usuario.favoritos = [];
+  async removeFromFavorites(usuario: Usuario, eventoId: string): Promise<Usuario> {
+    if (!usuario.id) {
+      throw new Error('ID del usuario requerido para actualizar favoritos.');
     }
   
-    // Filtrar el evento del arreglo de favoritos
-    usuario.favoritos = usuario.favoritos.filter(id => id !== eventoId);
+    const { data: existingUser, error: fetchError } = await supabase
+      .from('usuarios')
+      .select('favoritos')
+      .eq('id', usuario.id)
+      .single();
   
-    // Actualizar el usuario en la base de datos
+    if (fetchError || !existingUser) {
+      throw new Error('Usuario no encontrado o error al obtener datos.');
+    }
+  
+    const favoritos = existingUser.favoritos?.filter((id: string) => id !== eventoId) || [];
+  
     const { data, error } = await supabase
       .from('usuarios')
-      .update({ favoritos: usuario.favoritos })
-      .eq('id', usuario.id)
-      .select(); // Asegura que siempre haya datos retornados
+      .update({ favoritos })
+      .eq('id', usuario.id);
   
     if (error) {
       console.error('Error al eliminar de favoritos:', error);
       throw new Error(error.message);
     }
   
-    // Validar que `data` sea un array de usuarios
-    if (Array.isArray(data) && data.length > 0) {
-      return data[0] as Usuario; // Retornar el usuario actualizado
-    }
-  
-    throw new Error('No se pudo procesar la solicitud. Respuesta inesperada.');
-  }
+    return { ...usuario, favoritos } as Usuario;
+  }  
 }

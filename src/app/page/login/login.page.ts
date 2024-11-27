@@ -62,12 +62,13 @@ export class LoginPage {
 
         const expirationTime = Date.now() + 3600000;
         await this.authService.saveUserData({
+          id: usuario.id,
           username: usuario.username,
           password: usuario.password,
           role: usuario.role,
           email: usuario.email,
           fullName: usuario.fullName,
-          brithDate: usuario.birthDate,
+          birthDate: usuario.birthDate,
           expiration: expirationTime,
         });
 

@@ -22,4 +22,4 @@ export class ListaEventosPage implements OnInit {
   goToHome() {
     this.navCtrl.navigateForward('/home');
   }
-} 
+}

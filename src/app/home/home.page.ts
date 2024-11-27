@@ -8,6 +8,8 @@ import { Share } from '@capacitor/share';
 import { UsersService } from '../services/usuarios/users.service';
 import { Storage } from '@ionic/storage-angular';
 import { ToastController } from '@ionic/angular';
+import { AuthServiceService } from '../services/authService/auth-service.service';
+import { supabase } from '../services/supabase/supabase.service';
 
 @Component({
   selector: 'app-home',
@@ -39,7 +41,8 @@ export class HomePage implements OnInit {
     private loadingController: LoadingController,
     private router: Router,
     private storage: Storage,
-    private toastController: ToastController
+    private toastController: ToastController,
+    private authService: AuthServiceService
   ) {}
 
   async ShareEvent() {
@@ -54,14 +57,16 @@ export class HomePage implements OnInit {
 
   async ngOnInit() {
     await this.storage.create();
-    this.loggedUser = JSON.parse(sessionStorage.getItem('userkey') || '{}' );
+    this.loggedUser = JSON.parse(sessionStorage.getItem('userkey') || '{}');
+
     if (!this.loggedUser.favoritos) {
-      this.loggedUser.favoritos = [];  // Inicializa favoritos si no existe
+        this.loggedUser.favoritos = [];
     }
+
     console.log('Usuario logueado:', this.loggedUser);
+
     this.updateWeekLabels();
-    await this.cargarEventos();
-    
+
     const loading = await this.loadingController.create({
         message: 'Cargando datos...',
         spinner: 'circles',
@@ -69,12 +74,28 @@ export class HomePage implements OnInit {
     await loading.present();
 
     try {
-      this.updateEventos();
-      this.eventosFiltrados = this.eventosSemanaActual;
+        await this.getLoggedUserFavorites();
+        await this.cargarEventos();
+        await this.updateEventos();
+        this.eventosFiltrados = this.eventosSemanaActual;
     } catch (error) {
-        console.error('Error al obtener eventos:', error);
+        console.error('Error al cargar datos:', error);
     } finally {
         loading.dismiss();
+    }
+  }
+
+  async getLoggedUserFavorites() {
+    try {
+      const userData = await this.authService.getUserData();
+      if (!userData) {
+        console.error('No hay usuario logueado.');
+        return;
+      }
+      this.loggedUser = userData;
+      console.log('Favoritos del usuario logueado:', this.loggedUser.favoritos || []);
+    } catch (error) {
+      console.error('Error al obtener favoritos del usuario:', error);
     }
   }
 
@@ -140,18 +161,18 @@ export class HomePage implements OnInit {
   }
   
   startOfWeek(date: Date, offset = 0): Date {
-    const targetDate = new Date(date); // Clonamos la fecha para evitar modificar la original
-    const day = targetDate.getDay(); // Día actual (0=Domingo, ..., 6=Sábado)
-    const diff = targetDate.getDate() - day + (day === 0 ? -6 : 1) + offset; // Ajuste para iniciar en lunes
+    const targetDate = new Date(date);
+    const day = targetDate.getDay();
+    const diff = targetDate.getDate() - day + (day === 0 ? -6 : 1) + offset;
     const start = new Date(targetDate.setDate(diff));
-    start.setHours(0, 0, 0, 0); // Reinicia hora a las 00:00:00
+    start.setHours(0, 0, 0, 0);
     return start;
   }
   
   endOfWeek(start: Date): Date {
-    const end = new Date(start); // Clonamos la fecha de inicio
-    end.setDate(start.getDate() + 6); // Suma 6 días para llegar al domingo
-    end.setHours(23, 59, 59, 999); // Establece la hora final del día
+    const end = new Date(start);
+    end.setDate(start.getDate() + 6);
+    end.setHours(23, 59, 59, 999);
     return end;
   }
 
@@ -183,29 +204,19 @@ export class HomePage implements OnInit {
   }
   
   updateEventos() {
-    // Semana actual
     const inicioSemanaActual = this.startOfWeek(new Date());
     const finSemanaActual = this.endOfWeek(inicioSemanaActual);
   
-    // Próxima semana
     const inicioProximaSemana = this.startOfWeek(new Date(), 7);
     const finProximaSemana = this.endOfWeek(inicioProximaSemana);
   
-    // Subsiguiente semana
     const inicioSubsiguienteSemana = this.startOfWeek(new Date(), 14);
     const finSubsiguienteSemana = this.endOfWeek(inicioSubsiguienteSemana);
   
-    // Filtrar eventos por semana
     this.eventosSemanaActual = this.filtrarEventosPorSemana(inicioSemanaActual, finSemanaActual);
     this.eventosProximaSemana = this.filtrarEventosPorSemana(inicioProximaSemana, finProximaSemana);
     this.eventosSubsiguienteSemana = this.filtrarEventosPorSemana(inicioSubsiguienteSemana, finSubsiguienteSemana);
   
-    // Debug: Imprimir semanas y sus eventos
-    console.log('Semana actual:', { inicio: inicioSemanaActual, fin: finSemanaActual });
-    console.log('Próxima semana:', { inicio: inicioProximaSemana, fin: finProximaSemana });
-    console.log('Subsiguiente semana:', { inicio: inicioSubsiguienteSemana, fin: finSubsiguienteSemana });
-  
-    // Actualizar etiquetas
     this.currentWeek = `Semana del ${inicioSemanaActual.toLocaleDateString()} al ${finSemanaActual.toLocaleDateString()}`;
     this.nextWeek = `Semana del ${inicioProximaSemana.toLocaleDateString()} al ${finProximaSemana.toLocaleDateString()}`;
     this.followingWeek = `Semana del ${inicioSubsiguienteSemana.toLocaleDateString()} al ${finSubsiguienteSemana.toLocaleDateString()}`;
@@ -213,13 +224,12 @@ export class HomePage implements OnInit {
 
   filtrarEventosPorSemana(inicioSemana: Date, finSemana: Date): Evento[] {
     return this.eventos.filter(evento => {
-      // Verificamos que evento.fecha es un objeto Date
       if (!(evento.fecha instanceof Date)) {
         console.error('Fecha inválida en el evento:', evento);
         return false;
       }
   
-      const fechaEvento = evento.fecha; // Si ya es un Date, la puedes usar directamente
+      const fechaEvento = evento.fecha;
       return fechaEvento >= inicioSemana && fechaEvento <= finSemana;
     });
   }  
@@ -256,18 +266,26 @@ export class HomePage implements OnInit {
     return Array.isArray(this.loggedUser?.favoritos) && this.loggedUser.favoritos.includes(evento.id);
   }
 
-  toggleFavorite(evento: any): void {
-    if (Array.isArray(this.loggedUser?.favoritos)) {
-      const index = this.loggedUser.favoritos.indexOf(evento.id);
-      if (index === -1) {
-        this.loggedUser.favoritos.push(evento.id);
-        this.showToast('Agregado a favoritos');
-      } else {
-        this.loggedUser.favoritos.splice(index, 1);
-        this.showToast('Eliminado de favoritos');
-      }
+  async toggleFavorite(evento: any): Promise<void> {
+    if (!this.loggedUser) {
+      console.error('No hay usuario logueado.');
+      return;
+    }
   
+    try {
+      const isFavorite = this.isFavorite(evento);
+      
+      if (isFavorite) {
+        this.loggedUser = await this.usersService.removeFromFavorites(this.loggedUser, evento.id);
+        this.showToast('Eliminado de favoritos');
+      } else {
+        this.loggedUser = await this.usersService.addToFavorites(this.loggedUser, evento.id);
+        this.showToast('Agregado a favoritos');
+      }
+    
       localStorage.setItem('favoritos', JSON.stringify(this.loggedUser.favoritos));
+    } catch (error) {
+      console.error('Error al actualizar favoritos:', error);
     }
   }
 
@@ -280,17 +298,56 @@ export class HomePage implements OnInit {
     await toast.present();
   }
 
-  async addToFavorites(eventoId: number) {
-    this.loggedUser = await this.usersService.addToFavorites(this.loggedUser, eventoId);
-    const toast = await this.toastController.create({
-      message: 'Agregado a favoritos',
-      duration: 2000,
-      position: 'bottom',
-    });
-    await toast.present();
-  }
+  async addToFavorites(user: Usuario, eventoId: string): Promise<Usuario> {
+    if (!user.favoritos) {
+      user.favoritos = [];
+    }
+  
+    if (!user.favoritos.includes(eventoId)) {
+      user.favoritos.push(eventoId);
+    }
+  
+    console.log('ID del usuario:', user.id);
+  
+    if (!user.id) {
+      console.error('ID del usuario no disponible.');
+      throw new Error('ID del usuario no disponible');
+    }
+  
+    console.log('Usuario antes del PATCH:', user);
+    if (!user.id) {
+      console.error('El ID del usuario no está definido.');
+      throw new Error('ID del usuario requerido para actualizar favoritos');
+    }
 
-  async removeFromFavorites(eventoId: number) {
-    this.loggedUser = await this.usersService.removeFromFavorites(this.loggedUser, eventoId);
+    const { data, error } = await supabase
+      .from('usuarios')
+      .update({ favoritos: user.favoritos })
+      .eq('id', user.id);
+  
+    if (error) {
+      console.error('Error al agregar a favoritos:', error.message);
+      throw new Error('Error al agregar a favoritos');
+    }
+  
+    return { ...user, favoritos: user.favoritos };
+  }  
+
+  async removeFromFavorites(user: Usuario, eventoId: string): Promise<Usuario> {
+    if (user.favoritos) {
+      user.favoritos = user.favoritos.filter(id => id !== eventoId);
+    }
+  
+    const { data, error } = await supabase
+      .from('usuarios')
+      .update({ favoritos: user.favoritos })
+      .eq('id', user.id);
+  
+    if (error) {
+      console.error('Error al eliminar de favoritos:', error.message);
+      throw new Error('Error al eliminar de favoritos');
+    }
+  
+    return { ...user, favoritos: user.favoritos };
   }
 }

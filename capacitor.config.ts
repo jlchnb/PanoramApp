@@ -1,9 +1,10 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
+  appId: 'com.julio.panoramapp',
   appName: 'PanoramApp',
-  webDir: 'www'
+  webDir: 'www',
+  bundledWebRuntime: false,
 };
 
 export default config;

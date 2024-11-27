@@ -7,15 +7,14 @@ export interface GPSCoordinates {
 }
 
 export interface Evento {
-  id: number;
+  id: string;
   nombre: string;
   fecha: Date;
   ubicacion: string;
   categorias: CategoriaEvento[];
   imagen: string;
   precio?: number;
-  isValidado: boolean;
-  gps?: GPSCoordinates;
-  radio?: number;
-  duracionHoras?: number;
+  lat: number;
+  lng: number;
+  horainicio: string;
 }

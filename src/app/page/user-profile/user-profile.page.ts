@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { AlertController, NavController } from '@ionic/angular';
 import { Usuario } from 'src/app/models/Usuario';
 import { UsersService } from 'src/app/services/usuarios/users.service';
-import { Router } from '@angular/router'; // Necesario para la navegación
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-profile',
@@ -11,20 +11,20 @@ import { Router } from '@angular/router'; // Necesario para la navegación
 })
 export class UserProfilePage {
   loggedUser!: Usuario;
-  isAnonymous: boolean = false; // Nueva propiedad para verificar si es invitado
+  isAnonymous: boolean = false;
 
   constructor(
     private usersService: UsersService,
     private navCtrl: NavController,
     private alertController: AlertController,
-    private router: Router // Agregamos el Router para redirigir al registro
+    private router: Router
   ) {
     const storedUser = sessionStorage.getItem('userkey');
     console.log('Datos que recibo en UserProfile:', storedUser);
     
     if (storedUser) {
       this.loggedUser = JSON.parse(storedUser);
-      this.isAnonymous = this.loggedUser.role === 'anonymous'; // Establecemos si es invitado
+      this.isAnonymous = this.loggedUser.role === 'anonymous';
     } else {
       this.loggedUser = {
         username: 'Error',
@@ -32,7 +32,7 @@ export class UserProfilePage {
         role: 'anonymous',
         isVerified: false
       };
-      this.isAnonymous = true; // Si no hay usuario, consideramos que es un invitado
+      this.isAnonymous = true;
     }
   }
 

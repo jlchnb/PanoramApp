@@ -17,7 +17,7 @@
         </ion-item>
         <ion-item *ngIf="loggedUser?.role !== 'anonymous'" button (click)="goToFavorites()">
           <ion-icon name="bookmarks-outline" slot="start" class="black-icon"></ion-icon>
-          Favoritos
+          Mis Favoritos
         </ion-item>
         <ion-item *ngIf="loggedUser?.role !== 'anonymous'" button (click)="goToSettings()">
           <ion-icon name="settings-outline" slot="start" class="black-icon"></ion-icon>
@@ -50,7 +50,6 @@
     </ion-header>
 
     <ion-content>
-      <!-- Ion-segment para el filtro de eventos -->
       <ion-segment value="estaSemana" (ionChange)="cambiarFiltro($event)" class="home-tabs">
         <ion-segment-button value="estaSemana">
           <ion-label>Esta<br>semana</ion-label>
@@ -63,7 +62,6 @@
         </ion-segment-button>
       </ion-segment>
 
-      <!-- Eventos mostrados según el filtro -->
       <ion-grid>
         <ion-row *ngIf="eventosFiltrados.length > 0; else noEventsTemplate">
           <ion-col size="12" *ngFor="let evento of eventosFiltrados">
@@ -71,6 +69,7 @@
               <ion-card-content>
                 <p><strong>Nombre:</strong> {{ evento.nombre }}</p>
                 <p><strong>Lugar:</strong> {{ evento.ubicacion }}</p>
+                <p><strong>Hora:</strong> {{ evento.horainicio }}</p>
                 <div class="piscola">
                   <div class="categorias">
                     <ion-chip *ngFor="let categoria of evento.categorias" [ngClass]="categoria.toLowerCase()">

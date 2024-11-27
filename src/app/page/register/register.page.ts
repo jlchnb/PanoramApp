@@ -15,7 +15,7 @@ export class RegisterPage {
     role: 'user',
     fullName: '',
     email: '',
-    birthDate: ''  // Date format as 'YYYY-MM-DD'
+    birthDate: ''
   };
 
   constructor(private router: Router, private authService: AuthServiceService) {}
