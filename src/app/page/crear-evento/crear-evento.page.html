@@ -1,13 +1,62 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>crear-evento</ion-title>
+    <ion-title>Crear evento</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">crear-evento</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <!-- Mapa -->
+  <div id="map" style="height: 300px; margin-bottom: 16px;"></div>
+  <form (ngSubmit)="crearEvento()">
+    <ion-item>
+      <ion-label position="stacked">Nombre</ion-label>
+      <ion-input [(ngModel)]="evento.nombre" name="nombre" required></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Fecha</ion-label>
+      <ion-datetime [(ngModel)]="evento.fecha" name="fecha" presentation="date"></ion-datetime>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Ubicación</ion-label>
+      <ion-input [(ngModel)]="evento.ubicacion" name="ubicacion"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Categorías</ion-label>
+      <ion-select multiple [(ngModel)]="evento.categorias" name="categorias">
+        <ion-select-option *ngFor="let categoria of categorias" [value]="categoria">
+          {{ categoria }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Precio</ion-label>
+      <ion-input type="number" [(ngModel)]="evento.precio" name="precio"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Hora de Inicio</ion-label>
+      <ion-input [(ngModel)]="evento.horainicio" name="horainicio" type="text" placeholder="Ejemplo: 8:30 pm"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Imagen</ion-label>
+      <ion-input type="url" [(ngModel)]="evento.imagen" name="imagen"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Latitud</ion-label>
+      <ion-input [(ngModel)]="evento.lat" name="lat" readonly></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Longitud</ion-label>
+      <ion-input [(ngModel)]="evento.lng" name="lng" readonly></ion-input>
+    </ion-item>
+
+    <ion-button expand="full" type="submit">Crear Evento</ion-button>
+  </form>
 </ion-content>

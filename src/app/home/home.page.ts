@@ -10,6 +10,7 @@ import { Storage } from '@ionic/storage-angular';
 import { ToastController } from '@ionic/angular';
 import { AuthServiceService } from '../services/authService/auth-service.service';
 import { supabase } from '../services/supabase/supabase.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-home',
@@ -42,7 +43,8 @@ export class HomePage implements OnInit {
     private router: Router,
     private storage: Storage,
     private toastController: ToastController,
-    private authService: AuthServiceService
+    private authService: AuthServiceService,
+    private datePipe: DatePipe
   ) {}
 
   async ShareEvent() {
@@ -54,6 +56,9 @@ export class HomePage implements OnInit {
     });
   }
   
+  formatDate(date: Date): string {
+    return this.datePipe.transform(date, 'dd \'de\' MMM') || ''; 
+  }
 
   async ngOnInit() {
     await this.storage.create();

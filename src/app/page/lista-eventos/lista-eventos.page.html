@@ -2,9 +2,9 @@
   <ion-toolbar>
     <ion-title>Lista de Eventos</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="goToHome()">
-        Ver el home
-      </ion-button>
+      <ion-button (click)="goToHome()">Ver el home</ion-button>
+      <ion-button (click)="crearEvento()">Crear Evento</ion-button>
+      <ion-button (click)="loadEventos()">Actualizar</ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -25,10 +25,16 @@
         <ion-item>
           <ion-label>
             <h2>Nombre: {{ evento.nombre }} <ion-icon name="calendar-outline"></ion-icon></h2>
-            <p>Fecha: {{ evento.fecha }}</p>
+            <p>Fecha: {{ evento.fecha | date }}</p>
             <p>Ubicación: {{ evento.ubicacion }}</p>
             <p>Hora de inicio: {{ evento.horainicio }}</p>
           </ion-label>
+          <ion-button color="primary" (click)="editarEvento(evento)">
+            <ion-icon name="create-outline"></ion-icon>
+          </ion-button>
+          <ion-button color="danger" (click)="eliminarEvento(evento)">
+            <ion-icon name="trash-outline"></ion-icon>
+          </ion-button>
         </ion-item>
       </ng-container>
     </ion-list>

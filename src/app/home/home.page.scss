@@ -143,3 +143,15 @@ ion-menu::part(container) {
   width: 100%; /* Asegura que se alinee con el resto del contenido */
   text-align: center;
 }
+
+.fecha-badge {
+  position: absolute;
+  top: 10px; /* Distancia desde la parte superior */
+  right: 10px; /* Distancia desde la parte derecha */
+  background-color: #6309ad; /* Fondo azul, puedes cambiar el color */
+  color: rgb(255, 255, 255); /* Texto blanco */
+  font-weight: bold; /* Texto en negrita */
+  padding: 5px 10px; /* Un poco de espacio alrededor del texto */
+  font-size: 14px; /* Tamaño de fuente ajustado */
+  border-radius: 5px; /* Bordes redondeados */
+}

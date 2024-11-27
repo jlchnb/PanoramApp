@@ -20,7 +20,6 @@ export class AuthServiceService {
     }
   
     const encryptedData = this.encryptData(JSON.stringify(userData));
-    console.log('Datos cifrados:', encryptedData);
     await Preferences.set({
       key: 'userData',
       value: encryptedData,
@@ -29,7 +28,6 @@ export class AuthServiceService {
 
   async getUserData() {
     const { value } = await Preferences.get({ key: 'userData' });
-    console.log('Datos obtenidos de Preferences:', value);
   
     if (value) {
       try {

@@ -5,6 +5,9 @@ const config: CapacitorConfig = {
   appName: 'PanoramApp',
   webDir: 'www',
   bundledWebRuntime: false,
+  android: {
+    path: 'android',
+  },
 };
 
 export default config;

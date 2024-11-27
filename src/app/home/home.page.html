@@ -20,8 +20,8 @@
           Mis Favoritos
         </ion-item>
         <ion-item *ngIf="loggedUser?.role !== 'anonymous'" button (click)="goToSettings()">
-          <ion-icon name="settings-outline" slot="start" class="black-icon"></ion-icon>
-          Configuracion
+          <ion-icon name="qr-code-outline" slot="start" class="black-icon"></ion-icon>
+          Escanear QR
         </ion-item>
         <ion-item *ngIf="loggedUser?.role === 'admin'" button (click)="goToAdminPanel()">
           <ion-icon name="cube-sharp" color="black" slot="start"></ion-icon>
@@ -70,6 +70,7 @@
                 <p><strong>Nombre:</strong> {{ evento.nombre }}</p>
                 <p><strong>Lugar:</strong> {{ evento.ubicacion }}</p>
                 <p><strong>Hora:</strong> {{ evento.horainicio }}</p>
+                <ion-badge class="fecha-badge">{{ formatDate(evento.fecha) }}</ion-badge>
                 <div class="piscola">
                   <div class="categorias">
                     <ion-chip *ngFor="let categoria of evento.categorias" [ngClass]="categoria.toLowerCase()">

@@ -8,9 +8,7 @@ import { AuthServiceService } from '../authService/auth-service.service';
 })
 export class EventosService {
 
-  constructor(
-    private authService: AuthServiceService
-  ) { }
+  constructor(private authService: AuthServiceService) { }
 
   async obtenerEventos(): Promise<Evento[]> {
     const { data, error } = await supabase
@@ -33,7 +31,6 @@ export class EventosService {
     return eventos as Evento[];
   }
   
-
   async obtenerUsuarioLogueado() {
     const userData = await this.authService.getUserData();
     if (!userData) {
@@ -45,10 +42,12 @@ export class EventosService {
   }
 
   async crearEvento(evento: Evento): Promise<void> {
+    const { id, ...eventoSinId } = evento;
+  
     const eventoTransformado = {
-      ...evento,
+      ...eventoSinId,
       fecha: evento.fecha.toISOString().split('T')[0],
-      horainicio: evento.horainicio
+      horainicio: evento.horainicio,
     };
   
     const { error } = await supabase
@@ -57,6 +56,34 @@ export class EventosService {
   
     if (error) {
       console.error('Error al crear el evento:', error);
+    }
+  }
+
+  async actualizarEvento(evento: Evento): Promise<void> {
+    const eventoTransformado = {
+      ...evento,
+      fecha: evento.fecha.toISOString().split('T')[0],
+      horainicio: evento.horainicio
+    };
+  
+    const { error } = await supabase
+      .from('eventos')
+      .update(eventoTransformado)
+      .eq('id', evento.id);
+  
+    if (error) {
+      console.error('Error al actualizar el evento:', error);
+    }
+  }
+
+  async eliminarEvento(id: string): Promise<void> {
+    const { error } = await supabase
+      .from('eventos')
+      .delete()
+      .eq('id', id);
+  
+    if (error) {
+      console.error('Error al eliminar el evento:', error);
     }
   }
 }
