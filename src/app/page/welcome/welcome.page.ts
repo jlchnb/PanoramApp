@@ -60,8 +60,12 @@ export class WelcomePage implements OnInit {
       value: JSON.stringify(invitado),
     });
   
+    const storedUserData = sessionStorage.getItem('userkey');
+    console.log('Datos guardados en sessionStorage como invitado:', storedUserData);
+  
     this.router.navigate(['/home']);
   }
+  
 
   goToRegister() {
     this.router.navigate(['/register']);

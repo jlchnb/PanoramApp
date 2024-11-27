@@ -57,33 +57,41 @@ export class HomePage implements OnInit {
 
   async ngOnInit() {
     await this.storage.create();
-    this.loggedUser = JSON.parse(sessionStorage.getItem('userkey') || '{}');
-
-    if (!this.loggedUser.favoritos) {
-        this.loggedUser.favoritos = [];
+  
+    // Verifica que los datos del usuario se obtengan correctamente desde sessionStorage
+    const storedUserData = sessionStorage.getItem('userkey');
+    if (storedUserData) {
+      this.loggedUser = JSON.parse(storedUserData);
+    } else {
+      // Si no hay datos en sessionStorage, establecer valores predeterminados
+      this.loggedUser = {
+        username: 'Invitado',  // Cambiar por "Modo invitado" si el role es 'anonymous'
+        role: 'anonymous',
+        favoritos: [],
+      };
     }
-
+  
     console.log('Usuario logueado:', this.loggedUser);
-
+  
     this.updateWeekLabels();
-
+  
     const loading = await this.loadingController.create({
-        message: 'Cargando datos...',
-        spinner: 'circles',
+      message: 'Cargando datos...',
+      spinner: 'circles',
     });
     await loading.present();
-
+  
     try {
-        await this.getLoggedUserFavorites();
-        await this.cargarEventos();
-        await this.updateEventos();
-        this.eventosFiltrados = this.eventosSemanaActual;
+      await this.getLoggedUserFavorites();
+      await this.cargarEventos();
+      await this.updateEventos();
+      this.eventosFiltrados = this.eventosSemanaActual;
     } catch (error) {
-        console.error('Error al cargar datos:', error);
+      console.error('Error al cargar datos:', error);
     } finally {
-        loading.dismiss();
+      loading.dismiss();
     }
-  }
+  }  
 
   async getLoggedUserFavorites() {
     try {
