@@ -20,8 +20,8 @@
           Mis Favoritos
         </ion-item>
         <ion-item *ngIf="loggedUser?.role !== 'anonymous'" button (click)="goToSettings()">
-          <ion-icon name="qr-code-outline" slot="start" class="black-icon"></ion-icon>
-          Escanear QR
+          <ion-icon name="settings-outline" slot="start" class="black-icon"></ion-icon>
+          Configuracion
         </ion-item>
         <ion-item *ngIf="loggedUser?.role === 'admin'" button (click)="goToAdminPanel()">
           <ion-icon name="cube-sharp" color="black" slot="start"></ion-icon>

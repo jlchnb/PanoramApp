@@ -22,7 +22,7 @@ export class EventosService {
   
     const eventos = data.map(evento => ({
       ...evento,
-      fecha: new Date(evento.fecha),
+      fecha: new Date(`${evento.fecha}T00:00:00`),
       lat: evento.lat,
       lng: evento.lng,
       horainicio: evento.horainicio,
